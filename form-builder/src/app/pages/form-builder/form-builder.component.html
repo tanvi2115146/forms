@@ -1,0 +1,74 @@
+
+
+<div class="form-builder">
+   
+    <div class="sidebar">
+      <h3>Select Field Type</h3>
+      <button *ngFor="let field of fieldTypes" (click)="addField(field)">
+        {{ field.label }}
+      </button>
+  
+      
+      <div *ngIf="selectedField" class="edit-panel">
+        <h4>Edit Selected Field</h4>
+  
+        <label>Label:</label>
+        <input [(ngModel)]="selectedField.label" /> 
+  
+        <label *ngIf="selectedField.type === 'text'">Placeholder:</label>
+        <input *ngIf="selectedField.type === 'text'" [(ngModel)]="selectedField.placeholder" />
+  
+        
+        <div *ngIf="selectedField.type === 'dropdown' || selectedField.type === 'radio'">
+          <label>Options:</label>
+          <div *ngIf="selectedField?.options?.[0]">
+
+            <input  [(ngModel)]="selectedField.options[0]" (input)="$event.stopPropagation()"/>
+            <button (click)="removeOption(0)">X</button>
+          </div>
+          <div *ngFor="let opt of selectedField.options; let i = index">
+            {{i}} {{ selectedField.options[i]}}
+            <input  [(ngModel)]="selectedField.options[i]" (input)="$event.stopPropagation()"/>
+            <button (click)="removeOption(i)">X</button>
+          </div>
+
+          <button (click)="addOption()">+ Add Option</button>
+        </div>
+
+      </div>
+
+    </div>
+  
+    
+    <div class="preview">
+
+      <h3>Form preview</h3>
+
+      <div *ngFor="let field of formFields" >
+
+        <label>{{ field.label }}</label>
+  
+        <input *ngIf="field.type === 'text'" type="text" [placeholder]="field.placeholder" />
+        <br>
+  
+        <select *ngIf="field.type === 'dropdown'" >
+          <option *ngFor="let opt of field.options">{{ opt }}</option>
+        </select>
+        
+       
+        <br><br>
+        <div *ngIf="field.type === 'radio'">
+          <div *ngFor="let opt of field.options">
+            <input type="radio" [name]="field.label" [value]="opt"/> {{ opt }}
+          </div>
+          <br>
+        </div>
+
+      </div>
+
+    </div>
+
+</div>
+  
+  <button (click)="saveForm()">Save Form</button>
+  

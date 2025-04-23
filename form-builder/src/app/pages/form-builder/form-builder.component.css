@@ -1,0 +1,24 @@
+
+  .form-builder {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .sidebar {
+    background: #f4f4f4;
+    padding: 15px;
+    width: 250px;
+  }
+  
+  .edit-panel {
+    background: #e6f0ff;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .edit-panel input {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
