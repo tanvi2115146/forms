@@ -1,0 +1,17 @@
+<!-- preview.component.html -->
+<div class="preview">
+    <h3>Form Preview</h3>
+    <div *ngIf="formFields.length === 0">No fields found for this form.</div>
+    
+    <div *ngFor="let field of formFields">
+      
+      <label>{{ field.label }}</label>
+  
+      <app-text *ngIf="field.type === 'text'" [field]="field"></app-text>
+      <app-dropdown *ngIf="field.type === 'dropdown'" [field]="field"></app-dropdown>
+      <app-radio *ngIf="field.type === 'radio'" [field]="field"></app-radio>
+  
+      <br><br>
+    </div>
+  </div>
+  

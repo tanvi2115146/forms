@@ -22,6 +22,16 @@ export class AuthService {
     this.cookieService.set('authToken',token);
   }
 
+  saveUserInfo(userId: string, username: string) {
+    this.cookieService.set('userId', userId);
+    
+  }
+  
+  getUserId(): string {
+    return this.cookieService.get('userId');
+  }
+  
+  
   getToken(){
     return this.cookieService.get('authToken');
   }
@@ -31,7 +41,8 @@ export class AuthService {
   }
 
   logout(){
-    return this.cookieService.delete('authToken');
+     this.cookieService.delete('authToken');
+     this.cookieService.delete('userId');
 
   }
 }

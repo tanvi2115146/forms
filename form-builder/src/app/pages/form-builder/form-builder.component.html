@@ -21,14 +21,9 @@
         
         <div *ngIf="selectedField.type === 'dropdown' || selectedField.type === 'radio'">
           <label>Options:</label>
-          <div *ngIf="selectedField?.options?.[0]">
 
-            <input  [(ngModel)]="selectedField.options[0]" (input)="$event.stopPropagation()"/>
-            <button (click)="removeOption(0)">X</button>
-          </div>
           <div *ngFor="let opt of selectedField.options; let i = index">
-            {{i}} {{ selectedField.options[i]}}
-            <input  [(ngModel)]="selectedField.options[i]" (input)="$event.stopPropagation()"/>
+            <input  [(ngModel)]="selectedField.options[i].value" />
             <button (click)="removeOption(i)">X</button>
           </div>
 
@@ -42,29 +37,7 @@
     
     <div class="preview">
 
-      <h3>Form preview</h3>
-
-      <div *ngFor="let field of formFields" >
-
-        <label>{{ field.label }}</label>
-  
-        <input *ngIf="field.type === 'text'" type="text" [placeholder]="field.placeholder" />
-        <br>
-  
-        <select *ngIf="field.type === 'dropdown'" >
-          <option *ngFor="let opt of field.options">{{ opt }}</option>
-        </select>
-        
-       
-        <br><br>
-        <div *ngIf="field.type === 'radio'">
-          <div *ngFor="let opt of field.options">
-            <input type="radio" [name]="field.label" [value]="opt"/> {{ opt }}
-          </div>
-          <br>
-        </div>
-
-      </div>
+      <app-preview [formFields]="formFields"></app-preview>
 
     </div>
 

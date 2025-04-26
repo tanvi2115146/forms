@@ -1,3 +1,14 @@
 <h1>Welcome</h1>
-<button (click)="router.navigate(['/form'])">create Form</button>
+<button (click)="createNewForm()">Create Form</button>
 <button (click)="onLogout()"> logout</button>
+
+
+<h2>Your Forms:</h2>
+<ul *ngIf="forms.length > 0">
+  <li *ngFor="let form of forms">
+    <a [routerLink]="['/build', form.formId]">Form ID: {{ form.formId }}</a>
+  </li>
+</ul>
+<p *ngIf="forms.length === 0">No forms found.</p>
+
+

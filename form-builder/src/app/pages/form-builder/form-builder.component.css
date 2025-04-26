@@ -1,4 +1,4 @@
-
+/* 
   .form-builder {
     display: flex;
     gap: 20px;
@@ -20,5 +20,125 @@
   .edit-panel input {
     margin-bottom: 10px;
     width: 100%;
+  }
+   */
+
+
+
+   .form-builder {
+    display: flex;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  .sidebar {
+    width: 300px;
+    background-color: #f2f7ff;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .sidebar h3 {
+    margin-bottom: 15px;
+  }
+  
+  .sidebar button {
+    display: inline-block;
+    margin: 5px 5px 10px 0;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .sidebar button:hover {
+    background-color: #0056b3;
+  }
+  
+  .edit-panel {
+    background-color: #dbeeff;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  .edit-panel label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+  }
+  
+  .edit-panel input {
+    width: 100%;
+    padding: 6px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .edit-panel button {
+    margin-top: 5px;
+    padding: 4px 8px;
+    font-size: 12px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .edit-panel button:hover {
+    background-color: #c82333;
+  }
+  
+  .preview {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fafafa;
+  }
+  
+  .preview h3 {
+    margin-bottom: 20px;
+  }
+  
+  .preview label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+  }
+  
+  .preview input[type="text"],
+  .preview select {
+    padding: 6px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .preview input[type="radio"] {
+    margin-right: 6px;
+  }
+  
+  button.save-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: green;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  button.save-btn:hover {
+    background-color: darkgreen;
   }
   

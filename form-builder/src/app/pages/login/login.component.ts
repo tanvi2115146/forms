@@ -11,22 +11,37 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
+
 export class LoginComponent {
     email='';
     password='';
+    
 
     constructor(private auth:AuthService,private router:Router){}
 
-    onLogin(){
-      this.auth.login({email:this.email,password:this.password})
-      .subscribe({
-        next:(res:any)=>{
-          console.log('Login Response:', res);
-          this.auth.saveToken(res.token);
-          this.router.navigate(['/dashboard']);
+    onLogin() {
+      const user = {
+        email: this.email,
+        password: this.password
+      };
+    
+      this.auth.login(user).subscribe({
+        next: (res: any) => {
+          if (res.message === 'Login successful') {
+            this.auth.saveToken(res.token);
+            this.auth.saveUserInfo(res.userId, res.username);
+            console.log('token',res.token,"userId",res.userId);
+            this.router.navigate(['/dashboard']);
+          } else {
+            alert('Login failed: ' + res.message);
+          }
         },
-        error:(err)=>alert(err.error.message),
+        error: (err) => {
+          alert('Login failed: ' + err.error.message);
+        }
       });
     }
+    
 
 }

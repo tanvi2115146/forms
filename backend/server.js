@@ -4,7 +4,7 @@ const express=require('express');
 const bodyParser=require('body-parser');
 const cors = require('cors');
 const authRoutes = require('./routes/user.routes');
-// const authenticateToken = require('./middleware/authMiddleware');
+const authenticateToken = require('./middleware/authMiddleware');
 const formRoute =require('./routes/form.route')
 
 const app=express();
