@@ -26,7 +26,7 @@ export class PreviewComponent {
 
 
   ngOnInit() {
-    if (this.isPreviewOnly) {  // <--- ONLY if standalone
+    if (this.isPreviewOnly) { 
       const formId = this.route.snapshot.paramMap.get('formId') || '';
       if (formId) {
         this.formService.getFormByFormId(formId).subscribe({

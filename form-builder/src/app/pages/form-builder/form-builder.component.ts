@@ -33,11 +33,12 @@ export class FormBuilderComponent {
     if (this.formId) {
       this.formService.getFormByFormId(this.formId).subscribe({
         next: (res: any) => {
-          this.formFields = res.fields; // Pre-fill the form builder
+          this.formFields = res.fields; 
         },
         error: (err) => console.error('Error loading form:', err)
       });
     }
+    
   }
 
   constructor(
