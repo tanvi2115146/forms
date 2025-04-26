@@ -18,9 +18,29 @@ import { FormService } from '../../services/form.service';
 })
 export class PreviewComponent {
   @Input() formFields: any[] = [];
+  @Input() isPreviewOnly: boolean = true;
+
+
 
   constructor(private route:ActivatedRoute,private formService:FormService){}
 
+
+  ngOnInit() {
+    if (this.isPreviewOnly) {  // <--- ONLY if standalone
+      const formId = this.route.snapshot.paramMap.get('formId') || '';
+      if (formId) {
+        this.formService.getFormByFormId(formId).subscribe({
+          next: (res: any) => {
+            this.formFields = res.fields;
+            console.log('Fetched fields:', this.formFields);
+          },
+          error: (err) => {
+            console.error('Error loading form fields:', err);
+          }
+        });
+      }
+    }
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['formFields']) {

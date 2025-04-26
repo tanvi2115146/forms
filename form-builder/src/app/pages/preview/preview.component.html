@@ -4,7 +4,7 @@
     <div *ngIf="formFields.length === 0">No fields found for this form.</div>
     
     <div *ngFor="let field of formFields">
-      
+     
       <label>{{ field.label }}</label>
   
       <app-text *ngIf="field.type === 'text'" [field]="field"></app-text>
