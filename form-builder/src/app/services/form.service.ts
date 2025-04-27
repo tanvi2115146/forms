@@ -11,7 +11,7 @@ export class FormService {
   constructor(private http: HttpClient) {}
 
   saveForm(userId: string, formId: string, fields: any[]) {
-    return this.http.post(`${this.baseUrl}/save`, {userId,formId,fields });
+    return this.http.post(`${this.baseUrl}/save`, {formId,fields });
   }
   
   getFormByUserId(userId: string) {
@@ -25,5 +25,7 @@ export class FormService {
   createForm(userId: string) {
     return this.http.post<any>(`${this.baseUrl}/createform`, { userId });
   }
+  
+
   
 }

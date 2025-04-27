@@ -8,6 +8,7 @@ import { PreviewComponent } from '../preview/preview.component';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 
+
 @Component({
   selector: 'app-form-builder',
   standalone: true,
@@ -30,21 +31,32 @@ export class FormBuilderComponent {
 
   ngOnInit() {
     this.formId = this.route.snapshot.paramMap.get('formId') || '';
+    
     if (this.formId) {
       this.formService.getFormByFormId(this.formId).subscribe({
         next: (res: any) => {
-          this.formFields = res.fields; 
+          if (res.fields && res.fields.length > 0) {
+            this.formFields = res.fields; // If form has fields in database
+          } else {
+            this.setDefaultField(); // If no fields, set default "Name" field
+          }
         },
-        error: (err) => console.error('Error loading form:', err)
+        error: (err) => {
+          console.error('Error loading form:', err);
+          this.setDefaultField(); // Also set default if error happens
+        }
       });
+    } else {
+      this.setDefaultField(); // No formId means new form, set default
     }
-    
   }
+  
 
   constructor(
     private formService: FormService,
     private auth: AuthService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+   
   ) {
     this.userId = this.auth.getUserId();
     
@@ -70,6 +82,20 @@ export class FormBuilderComponent {
     }
   }
 
+
+
+  setDefaultField() {
+    const defaultNameField = {
+      type: 'text',
+      label: 'Name',
+      placeholder: 'Enter your name',
+      options: []
+    };
+    this.formFields = [defaultNameField];
+  }
+  
+
+
   saveForm() {
     if (!this.formId) {
       alert('Form ID is missing. Please create a form first.');
@@ -85,4 +111,9 @@ export class FormBuilderComponent {
       },
     });
   }
+
+
+
+ 
+  
 }
