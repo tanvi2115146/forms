@@ -10,5 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './text.component.css'
 })
 export class TextComponent {
-  @Input() field: any;
+  // @Input() field: any;
+  @Input() label: string = '';
+  @Input() placeholder: string = '';
 }

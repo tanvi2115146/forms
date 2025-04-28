@@ -4,10 +4,9 @@
     <div *ngIf="formFields.length === 0">No fields found for this form.</div>
     
     <div *ngFor="let field of formFields">
-     
-      <label>{{ field.label }}</label>
-  
-      <app-text *ngIf="field.type === 'text'" [field]="field"></app-text>
+    
+      <app-text *ngIf="field.type === 'text'" [label]="field.label" [placeholder]="field.placeholder"></app-text>
+
       <app-dropdown *ngIf="field.type === 'dropdown'" [field]="field"></app-dropdown>
       <app-radio *ngIf="field.type === 'radio'" [field]="field"></app-radio>
   

@@ -36,18 +36,18 @@ export class FormBuilderComponent {
       this.formService.getFormByFormId(this.formId).subscribe({
         next: (res: any) => {
           if (res.fields && res.fields.length > 0) {
-            this.formFields = res.fields; // If form has fields in database
+            this.formFields = res.fields; 
           } else {
-            this.setDefaultField(); // If no fields, set default "Name" field
+            this.setDefaultField(); 
           }
         },
         error: (err) => {
           console.error('Error loading form:', err);
-          this.setDefaultField(); // Also set default if error happens
+          this.setDefaultField(); 
         }
       });
     } else {
-      this.setDefaultField(); // No formId means new form, set default
+      this.setDefaultField(); 
     }
   }
   
@@ -89,7 +89,6 @@ export class FormBuilderComponent {
       type: 'text',
       label: 'Name',
       placeholder: 'Enter your name',
-      options: []
     };
     this.formFields = [defaultNameField];
   }
