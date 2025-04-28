@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { TextComponent } from '../../pages/text/text.component';
 import { DropdownComponent } from '../../pages/dropdown/dropdown.component';
 import { RadioComponent } from '../../pages/radio/radio.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute ,Router} from '@angular/router';
 import { FormService } from '../../services/form.service';
 
 
@@ -20,27 +20,34 @@ export class PreviewComponent {
   @Input() formFields: any[] = [];
   @Input() isPreviewOnly: boolean = true;
 
+  currentIndex:number=0;
+  isPreviewRoute: boolean = false; 
 
+  constructor(private route:ActivatedRoute,private formService:FormService,private router:Router){}
 
-  constructor(private route:ActivatedRoute,private formService:FormService){}
 
 
   ngOnInit() {
-    if (this.isPreviewOnly) { 
-      const formId = this.route.snapshot.paramMap.get('formId') || '';
-      if (formId) {
-        this.formService.getFormByFormId(formId).subscribe({
-          next: (res: any) => {
-            this.formFields = res.fields;
-            console.log('Fetched fields:', this.formFields);
-          },
-          error: (err) => {
-            console.error('Error loading form fields:', err);
-          }
-        });
-      }
+    const currentUrl=this.router.url;
+    this.isPreviewRoute=currentUrl.includes('/preview/');
+
+    const formId = this.route.snapshot.paramMap.get('formId');
+    
+
+    if (this.isPreviewOnly && formId) { 
+      this.formService.getFormByFormId(formId).subscribe({
+        next: (res: any) => {
+          this.formFields = res.fields;
+          console.log('Fetched fields:', this.formFields);
+        },
+        error: (err) => {
+          console.error('Error loading form fields:', err);
+        }
+      });
     }
   }
+
+
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['formFields']) {
@@ -48,7 +55,19 @@ export class PreviewComponent {
     }
   }
   
+
+  next(){
+    if(this.currentIndex<this.formFields.length-1){
+      this.currentIndex++;
+    }
+  }
   
+
+  prev(){
+    if(this.currentIndex>0){
+      this.currentIndex--;
+    }
+  }
 }
 
 

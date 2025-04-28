@@ -4,11 +4,18 @@
 
 
 <h2>Your Forms:</h2>
-<ul *ngIf="forms.length > 0">
+<!-- <ul *ngIf="forms.length > 0">
   <li *ngFor="let form of forms">
     <a [routerLink]="['/build', form.formId]">Form ID: {{ form.formId }}</a>
   </li>
-</ul>
+</ul> -->
+
+<div *ngFor="let form of forms" class="form-card">
+  <p><strong>form Name:</strong>{{form.formName}}</p>
+  <p><strong>formID:</strong>{{form.formId}}</p>
+  <button (click)="editForm(form.formId)">Edit Form</button>
+</div>
+
 <p *ngIf="forms.length === 0">No forms found.</p>
 
 

@@ -8,6 +8,10 @@ const formSchema = new mongoose.Schema({
     unique: true,
     
   },
+  formName:{
+    type:String,
+    required:true,
+  },
   fields: Array
 });
 

@@ -34,7 +34,8 @@ export class DashboardComponent implements OnInit {
   loadForms(userId: string) {
     this.formService.getFormByUserId(userId).subscribe(
       (res) => {
-        this.forms = res;
+        console.log('response:',res);
+        this.forms = Array.isArray(res) ? res:[];
       },
       (err) => console.error(err)
     );
@@ -57,6 +58,11 @@ export class DashboardComponent implements OnInit {
       });
     }
   }
+
+  editForm(formId: string) {
+    this.router.navigate(['/build', formId]);
+  }
+
 
 
 }

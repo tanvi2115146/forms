@@ -10,8 +10,8 @@ export class FormService {
 
   constructor(private http: HttpClient) {}
 
-  saveForm(userId: string, formId: string, fields: any[]) {
-    return this.http.post(`${this.baseUrl}/save`, {formId,fields });
+  saveForm(userId: string, formId: string, formName:string,fields: any[]) {
+    return this.http.post(`${this.baseUrl}/save`, {formId,formName,fields });
   }
   
   getFormByUserId(userId: string) {

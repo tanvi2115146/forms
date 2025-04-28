@@ -3,6 +3,20 @@
 <div class="form-builder">
    
     <div class="sidebar">
+
+      <div class="form-name">
+        <div *ngIf="!isEditingName">
+          <h3>{{formName}}</h3>
+          <button (click)="isEditingName=true">Edit Name</button>
+        </div>
+
+        <div *ngIf="isEditingName">
+          <input [(ngModel)]="formName"/>
+          <button (click)="isEditingName=false">save</button>
+        </div>
+
+      </div>
+
       <h3>Select Field Type</h3>
       <button *ngFor="let field of fieldTypes" (click)="addField(field)">
         {{ field.label }}
@@ -45,4 +59,6 @@
 </div>
   
   <button (click)="saveForm()">Save Form</button>
+  <button (click)="copyLink()">CopyLink</button>
+  <button (click)="goLive()">Go Live</button>
   

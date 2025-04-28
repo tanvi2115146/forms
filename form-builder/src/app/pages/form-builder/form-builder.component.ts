@@ -1,5 +1,4 @@
 
-
 import { Component} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +6,8 @@ import { FormService } from '../../services/form.service';
 import { PreviewComponent } from '../preview/preview.component';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
+import{Clipboard} from '@angular/cdk/clipboard';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -27,6 +28,9 @@ export class FormBuilderComponent {
   selectedField: any = null;
   userId: string = '';
   formId: string = '';
+  formName:string='untitled form';
+
+  isEditingName:boolean=false;
 
 
   ngOnInit() {
@@ -36,10 +40,12 @@ export class FormBuilderComponent {
       this.formService.getFormByFormId(this.formId).subscribe({
         next: (res: any) => {
           if (res.fields && res.fields.length > 0) {
+           
             this.formFields = res.fields; 
           } else {
             this.setDefaultField(); 
           }
+          this.formName=res.formName || 'untitled form';
         },
         error: (err) => {
           console.error('Error loading form:', err);
@@ -56,6 +62,8 @@ export class FormBuilderComponent {
     private formService: FormService,
     private auth: AuthService,
     private route: ActivatedRoute,
+    private clipboard:Clipboard,
+    private router:Router
    
   ) {
     this.userId = this.auth.getUserId();
@@ -63,7 +71,6 @@ export class FormBuilderComponent {
   }
 
   
-
   addField(field: any) {
     const newField = { ...field, label: field.label, placeholder: '', options: field.options ? [...field.options] : [] };
     this.formFields.push(newField);
@@ -100,7 +107,7 @@ export class FormBuilderComponent {
       alert('Form ID is missing. Please create a form first.');
       return;
     }
-    this.formService.saveForm(this.userId, this.formId, this.formFields).subscribe({
+    this.formService.saveForm(this.userId, this.formId,this.formName,this.formFields).subscribe({
       next: () => {
         alert('Form saved successfully');
       },
@@ -111,6 +118,16 @@ export class FormBuilderComponent {
     });
   }
 
+
+  copyLink() {
+    const link = `${window.location.origin}/preview/${this.formId}`;
+    this.clipboard.copy(link); 
+    alert('Link copied to clipboard!');
+  }
+  
+  goLive() {
+    this.router.navigate(['/preview', this.formId]);
+  }
 
 
  

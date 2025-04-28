@@ -6,16 +6,18 @@ const createForm = async (req, res) => {
   try {
     const { userId } = req.body;
     const formId = uuidv4(); 
+    const formName="untitled form";
 
     const newForm = new Form({
       userId,
       formId,
+      formName,
       fields: []  
     });
 
     await newForm.save();
 
-    res.status(201).json({ message: 'Form created', formId });
+    res.status(201).json({ message: 'Form created', formId ,formName});
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Error creating form' });
@@ -26,18 +28,22 @@ const createForm = async (req, res) => {
 
 
 const saveForm = async (req, res) => {
-  const { formId, fields } = req.body;
+  const { formId, fields ,formName} = req.body;
 
   try {
     const form = await Form.findOneAndUpdate(
       { formId },
       { fields },
+      {formName},
       { new: true }
     );
 
     if (!form) {
       return res.status(404).json({ message: 'Form not found' });
     }
+    form.fields=fields;
+    form.formName=formName;
+    await form.save();
 
     res.status(200).json({ message: 'Form saved successfully', form });
   } catch (error) {

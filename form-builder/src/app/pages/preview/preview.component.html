@@ -1,16 +1,79 @@
-<!-- preview.component.html -->
-<div class="preview">
-    <h3>Form Preview</h3>
-    <div *ngIf="formFields.length === 0">No fields found for this form.</div>
-    
-    <div *ngFor="let field of formFields">
-    
-      <app-text *ngIf="field.type === 'text'" [label]="field.label" [placeholder]="field.placeholder"></app-text>
 
-      <app-dropdown *ngIf="field.type === 'dropdown'" [field]="field"></app-dropdown>
-      <app-radio *ngIf="field.type === 'radio'" [field]="field"></app-radio>
+
+   <div class="preview">
+    <h3>Form Preview</h3>
   
-      <br><br>
+    <div *ngIf="formFields.length === 0">
+      No fields found for this form.
+    </div>
+  
+  
+    <div *ngIf="formFields.length > 0 && isPreviewRoute">
+      <label>{{ formFields[currentIndex].label }}</label>
+  
+      <app-text 
+        *ngIf="formFields[currentIndex].type === 'text'" 
+        [placeholder]="formFields[currentIndex].placeholder">
+      </app-text>
+  
+      <app-dropdown 
+        *ngIf="formFields[currentIndex].type === 'dropdown'" 
+        [field]="formFields[currentIndex]">
+      </app-dropdown>
+  
+      <app-radio 
+        *ngIf="formFields[currentIndex].type === 'radio'" 
+        [field]="formFields[currentIndex]">
+      </app-radio>
+  
+      <div class="navigation-buttons">
+        <button (click)="prev()" [disabled]="currentIndex === 0">Previous</button>
+        <button (click)="next()" [disabled]="currentIndex === formFields.length - 1">Next</button>
+      </div>
+    </div>
+  
+
+    
+    <!-----normal display---- -->
+    <div *ngIf="formFields.length > 0 && !isPreviewRoute">
+      <div *ngFor="let field of formFields">
+        <label>{{ field.label }}</label>
+  
+        <app-text 
+          *ngIf="field.type === 'text'" 
+          [placeholder]="field.placeholder">
+        </app-text>
+  
+        <app-dropdown 
+          *ngIf="field.type === 'dropdown'" 
+          [field]="field">
+        </app-dropdown>
+  
+        <app-radio 
+          *ngIf="field.type === 'radio'" 
+          [field]="field">
+        </app-radio>
+  
+        <br><br>
+      </div>
     </div>
   </div>
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
