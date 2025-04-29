@@ -25,6 +25,13 @@
         *ngIf="formFields[currentIndex].type === 'radio'" 
         [field]="formFields[currentIndex]">
       </app-radio>
+
+      <app-lead-form 
+        *ngIf="formFields[currentIndex].type === 'lead'"
+        [field]="formFields[currentIndex]"
+        [visitorId]="visitorId"> >
+      </app-lead-form>
+
   
       <div class="navigation-buttons">
         <button (click)="prev()" [disabled]="currentIndex === 0">Previous</button>
@@ -35,6 +42,9 @@
 
     
     <!-----normal display---- -->
+
+
+
     <div *ngIf="formFields.length > 0 && !isPreviewRoute">
       <div *ngFor="let field of formFields">
         <label>{{ field.label }}</label>
@@ -53,27 +63,26 @@
           *ngIf="field.type === 'radio'" 
           [field]="field">
         </app-radio>
-  
+
+        <app-lead-form 
+         *ngIf="field.type === 'lead'"
+         [visitorId]="visitorId"
+         [field]="field">
+       </app-lead-form>
+    
+
+        <app-checkbox 
+          *ngIf="field.type === 'checkbox'" 
+          [field]="field">
+        </app-checkbox>
+ 
         <br><br>
       </div>
+
     </div>
   </div>
   
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
 

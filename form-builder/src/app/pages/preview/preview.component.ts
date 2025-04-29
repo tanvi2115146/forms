@@ -6,13 +6,16 @@ import { DropdownComponent } from '../../pages/dropdown/dropdown.component';
 import { RadioComponent } from '../../pages/radio/radio.component';
 import { ActivatedRoute ,Router} from '@angular/router';
 import { FormService } from '../../services/form.service';
+import { LeadFormComponent } from '../../lead-form/lead-form.component';
+import { CheckboxComponent } from '../../checkbox/checkbox.component';
+import { visitorservice } from '../../services/visitor.service';
 
 
 
 @Component({
   selector: 'app-preview',
   standalone:true,
-  imports:[CommonModule,TextComponent,DropdownComponent,RadioComponent],
+  imports:[CommonModule,TextComponent,DropdownComponent,RadioComponent,LeadFormComponent,CheckboxComponent],
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.css']
 })
@@ -22,8 +25,10 @@ export class PreviewComponent {
 
   currentIndex:number=0;
   isPreviewRoute: boolean = false; 
+  visitorId: string = '';
 
-  constructor(private route:ActivatedRoute,private formService:FormService,private router:Router){}
+
+  constructor(private route:ActivatedRoute,private formService:FormService,private router:Router,private visitorservice:visitorservice){}
 
 
 
@@ -39,6 +44,16 @@ export class PreviewComponent {
         next: (res: any) => {
           this.formFields = res.fields;
           console.log('Fetched fields:', this.formFields);
+
+          this.visitorservice.createVisitor().subscribe({
+            next: (visitor) => {
+              this.visitorId = visitor._id;
+              console.log('Visitor created:', visitor);
+            },
+            error: (err) => {
+              console.error('Error creating visitor:', err);
+            }
+          });
         },
         error: (err) => {
           console.error('Error loading form fields:', err);
@@ -68,6 +83,8 @@ export class PreviewComponent {
       this.currentIndex--;
     }
   }
+
+
 }
 
 

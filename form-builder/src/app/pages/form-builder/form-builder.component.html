@@ -44,6 +44,24 @@
           <button (click)="addOption()">+ Add Option</button>
         </div>
 
+        <div *ngIf="selectedField?.type === 'lead'">
+          <h5>Edit Lead Fields</h5>
+          <div *ngFor="let subfield of selectedField.subfields; let i = index">
+            <label>Subfield {{ i + 1 }} Label:</label>
+            <input [(ngModel)]="subfield.label" />
+            
+            <label>Placeholder:</label>
+            <input [(ngModel)]="subfield.placeholder" />
+          </div>
+          
+        </div>
+
+        <div *ngIf="selectedField?.type === 'checkbox'">
+          <label>Checkbox Label:</label>
+          <input [(ngModel)]="selectedField.labelText" />
+        </div>
+
+
       </div>
 
     </div>

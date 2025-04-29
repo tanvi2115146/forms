@@ -22,6 +22,12 @@ export class FormBuilderComponent {
     { type: 'text', label: 'Text Input' },
     { type: 'dropdown', label: 'Dropdown', options: [{ value: 'option1' }, { value: 'option2' }] },
     { type: 'radio', label: 'Single Select', options: [{ value: 'first' }, { value: 'second' }, { value: 'third' }] },
+    { type: 'lead', label: 'Lead Generation Form', subfields: [
+      { label: 'First Name', placeholder: 'Enter your first name' },
+      { label: 'Email', placeholder: 'Enter your email' }
+      ]
+    },
+      {label:'checkbox',type:'checkbox',labelText:'I agree to Terms'} 
   ];
 
   formFields: any[] = [];
@@ -29,7 +35,6 @@ export class FormBuilderComponent {
   userId: string = '';
   formId: string = '';
   formName:string='untitled form';
-
   isEditingName:boolean=false;
 
 
@@ -72,7 +77,9 @@ export class FormBuilderComponent {
 
   
   addField(field: any) {
-    const newField = { ...field, label: field.label, placeholder: '', options: field.options ? [...field.options] : [] };
+    const newField = { ...field, label: field.label, placeholder: '', options: field.options ? [...field.options] : [] ,
+      subfields: field.subfields ? [...field.subfields] : [] , labelText: field.labelText || ''
+    };
     this.formFields.push(newField);
     this.selectedField = newField;
   }
@@ -126,10 +133,9 @@ export class FormBuilderComponent {
   }
   
   goLive() {
-    this.router.navigate(['/preview', this.formId]);
+    const url=this.router.serializeUrl(
+      this.router.createUrlTree(['/preview', this.formId])
+    );
+    window.open(url, '_blank');
   }
-
-
- 
-  
 }
