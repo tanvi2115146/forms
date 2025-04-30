@@ -1,23 +1,20 @@
 const mongoose = require('mongoose');
 
 const visitorSchema = new mongoose.Schema({
+  formId: String,
+  isLeadForm: Boolean,
   questionStats: [
     {
-      questionTitle: String,
-      isAnswered: Boolean,
-      answer: String
+      question: String,
+      answer: Boolean,
+      answerText: String,
     }
   ],
   leadForm: [
     {
-      fieldName: String,
-      value: String
+      data: Object
     }
-  ],
-  isLead: {
-    type: Boolean,
-    default: false
-  }
+  ]
 });
 
 module.exports = mongoose.model('Visitor', visitorSchema);

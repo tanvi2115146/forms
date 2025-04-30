@@ -38,35 +38,40 @@ export class PreviewComponent {
 
 
   ngOnInit() {
-    const currentUrl=this.router.url;
-    this.isPreviewRoute=currentUrl.includes('/preview/');
-
+    const currentUrl = this.router.url;
+    this.isPreviewRoute = currentUrl.includes('/preview/');
     const formId = this.route.snapshot.paramMap.get('formId');
-    
-
-    if (this.isPreviewOnly && formId) { 
+  
+    if (this.isPreviewOnly && formId) {
       this.formService.getFormByFormId(formId).subscribe({
         next: (res: any) => {
           this.formFields = res.fields;
           console.log('Fetched fields:', this.formFields);
-
-          this.visitorservice.createVisitor().subscribe({
-            next: (visitor) => {
-              this.visitorId = visitor._id;
-              console.log('Visitor created:', visitor);
+  
+          const hasLeadForm = this.formFields.some(f => f.type === 'lead');
+  
+          this.visitorservice.createVisitor(formId!).subscribe({
+            next: (res) => {
+              console.log("Visitor created:", res);
+              this.visitorId = res._id;
+        
+              const hasLeadForm = this.formFields.some(f => f.type === 'lead');
+              const stat = { question: 'isLeadForm', answer: hasLeadForm, answerText: '' };
+        
+              this.visitorservice.updateQuestionStats(this.visitorId, [stat]).subscribe({
+                next: updated => console.log("Visitor updated with isLeadForm:", updated)
+              });
+            }
+          });
             },
             error: (err) => {
               console.error('Error creating visitor:', err);
             }
           });
-        },
-        error: (err) => {
-          console.error('Error loading form fields:', err);
-        }
-      });
+       
     }
   }
-
+  
 
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -89,20 +94,18 @@ export class PreviewComponent {
     }
   }
 
-
-
+  
   storeAnswer(answerObj: { question: string, answer: string }) {
-    const existing = this.questionStats.find(q => q.question === answerObj.question);
-    if (existing) {
-      existing.answer = answerObj.answer;
-    } else {
-      this.questionStats.push(answerObj);
-    }
+    const newStat = [{
+      question: answerObj.question,
+      answer: true,
+      answerText: answerObj.answer
+    }];
   
-    console.log('Updated questionStats:', this.questionStats);
-    this.statsUpdated.emit(this.questionStats); 
+    this.visitorservice.updateQuestionStats(this.visitorId, newStat).subscribe({
+      next: updated => console.log("Live question update:", updated)
+    });
   }
-  
   
 
 

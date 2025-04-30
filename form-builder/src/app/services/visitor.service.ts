@@ -8,11 +8,17 @@ export class visitorservice {
 
   constructor(private http: HttpClient) {}
 
-  createVisitor() {
-    return this.http.post<any>(`${this.baseUrl}/create-visitor`, {});
+
+  createVisitor(formId: string) {
+    return this.http.post<any>(`${this.baseUrl}/create-visitor`, { formId });
+  }
+
+  updateQuestionStats(visitorId: string, questionStats: any[]) {
+    return this.http.patch<any>(`${this.baseUrl}/update-question/${visitorId}`, { questionStats });
+  }
+
+  submitLead(visitorId: string, data: any) {
+    return this.http.put<any>(`${this.baseUrl}/submit-lead/${visitorId}`, { data });
   }
   
-  submitLead(visitorId: string, payload:{leadForm: any[], questionStats: any[]}) {
-    return this.http.put<any>(`${this.baseUrl}/submit-lead/${visitorId}`,payload);
-  }
 }

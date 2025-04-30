@@ -36,8 +36,7 @@
         *ngIf="formFields[currentIndex].type === 'lead'"
         [field]="formFields[currentIndex]"
         [visitorId]="visitorId"
-        [questionStats]="questionStats"
-        [leadform]="leadform">
+        >
       </app-lead-form>
 
   
@@ -79,13 +78,14 @@
          *ngIf="field.type === 'lead'"
          [field]="field"
          [visitorId]="visitorId"
-         [questionStats]="questionStats">]
+        >
        </app-lead-form>
     
 
         <app-checkbox 
           *ngIf="field.type === 'checkbox'" 
-          [field]="field">
+          [field]="field"
+          >
         </app-checkbox>
  
         <br><br>
