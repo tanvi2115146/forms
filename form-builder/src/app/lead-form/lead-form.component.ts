@@ -15,19 +15,31 @@ export class LeadFormComponent {
   leadData: any = {};
   agreed: boolean = false;
   @Input() visitorId: string = '';
+  @Input() questionStats: { question: string, answer: string }[] = [];
 
-  
-  // submitForm() {
-  //   if (!this.agreed) {
-  //     alert('You must agree to the terms.');
-  //     return;
-  //   }
-  //   console.log('Lead form submitted:', this.leadData);
-  //   alert('Form Submitted Successfully!');
-  // }
 
 
 constructor(private visitorservice:visitorservice){}
+
+  // submitForm() {
+  //   const leadFormData = Object.entries(this.leadData).map(([fieldName, value]) => ({ fieldName, value }));
+  
+  //   if (!this.visitorId) {
+  //     console.error('Visitor ID not found!');
+  //     return;
+  //   }
+  
+  //   this.visitorservice.submitLead(this.visitorId, leadFormData).subscribe({
+  //     next: (res) => {
+  //       console.log("Visitor updated with lead form:", res);
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to submit lead:', err);
+  //     }
+  //   });
+  // }
+
+
 
   submitForm() {
     const leadFormData = Object.entries(this.leadData).map(([fieldName, value]) => ({ fieldName, value }));
@@ -37,9 +49,14 @@ constructor(private visitorservice:visitorservice){}
       return;
     }
   
-    this.visitorservice.submitLead(this.visitorId, leadFormData).subscribe({
+    const payload = {
+      leadForm: leadFormData,
+      questionStats: this.questionStats
+    };
+    console.log('payload sent :',payload)
+    this.visitorservice.submitLead(this.visitorId, payload).subscribe({
       next: (res) => {
-        console.log("Visitor updated with lead form:", res);
+        console.log("Visitor updated with lead form and question stats:", res);
       },
       error: (err) => {
         console.error('Failed to submit lead:', err);
@@ -47,4 +64,5 @@ constructor(private visitorservice:visitorservice){}
     });
   }
   
+
 }

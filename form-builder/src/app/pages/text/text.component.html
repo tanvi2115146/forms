@@ -2,5 +2,7 @@
 
 <div class="text-field">
     <label>{{ label }}</label>
-    <input type="text" [placeholder]="placeholder" />
+    <input type="text" [placeholder]="placeholder" 
+    [(ngModel)]="answer"
+    (input)="onInputChange()"/>
   </div>

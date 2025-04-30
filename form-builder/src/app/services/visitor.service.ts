@@ -12,10 +12,7 @@ export class visitorservice {
     return this.http.post<any>(`${this.baseUrl}/create-visitor`, {});
   }
   
-  submitLead(visitorId: string, leadForm: any[]) {
-    return this.http.put<any>(`${this.baseUrl}/submit-lead/${visitorId}`, { leadForm });
+  submitLead(visitorId: string, payload:{leadForm: any[], questionStats: any[]}) {
+    return this.http.put<any>(`${this.baseUrl}/submit-lead/${visitorId}`,payload);
   }
-
-  
-  
 }

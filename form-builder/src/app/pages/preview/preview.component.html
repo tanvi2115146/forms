@@ -13,23 +13,31 @@
   
       <app-text 
         *ngIf="formFields[currentIndex].type === 'text'" 
-        [placeholder]="formFields[currentIndex].placeholder">
+        [placeholder]="formFields[currentIndex].placeholder"
+        (answerSelected)="storeAnswer($event)">
+       
       </app-text>
   
       <app-dropdown 
         *ngIf="formFields[currentIndex].type === 'dropdown'" 
-        [field]="formFields[currentIndex]">
+        [field]="formFields[currentIndex]"
+        (answerSelected)="storeAnswer($event)">
+       
       </app-dropdown>
   
       <app-radio 
         *ngIf="formFields[currentIndex].type === 'radio'" 
-        [field]="formFields[currentIndex]">
+        [field]="formFields[currentIndex]"
+        (answerSelected)="storeAnswer($event)">
+        
       </app-radio>
 
       <app-lead-form 
         *ngIf="formFields[currentIndex].type === 'lead'"
         [field]="formFields[currentIndex]"
-        [visitorId]="visitorId"> >
+        [visitorId]="visitorId"
+        [questionStats]="questionStats"
+        [leadform]="leadform">
       </app-lead-form>
 
   
@@ -51,23 +59,27 @@
   
         <app-text 
           *ngIf="field.type === 'text'" 
-          [placeholder]="field.placeholder">
+          [placeholder]="field.placeholder"
+          (answerSelected)="storeAnswer($event)">
         </app-text>
   
         <app-dropdown 
           *ngIf="field.type === 'dropdown'" 
-          [field]="field">
+          [field]="field"
+          (answerSelected)="storeAnswer($event)">
         </app-dropdown>
   
         <app-radio 
           *ngIf="field.type === 'radio'" 
-          [field]="field">
+          [field]="field"
+          (answerSelected)="storeAnswer($event)">
         </app-radio>
 
         <app-lead-form 
          *ngIf="field.type === 'lead'"
+         [field]="field"
          [visitorId]="visitorId"
-         [field]="field">
+         [questionStats]="questionStats">]
        </app-lead-form>
     
 

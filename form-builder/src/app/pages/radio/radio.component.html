@@ -1,5 +1,6 @@
 <div *ngIf="field">
     <div *ngFor="let opt of field.options">
-      <input type="radio" [name]="field.label" [value]="opt.value" /> {{ opt.value }}
+      <input type="radio" [name]="field.label" [value]="opt.value"   [(ngModel)]="answer"
+      (change)="onInputChange()" /> {{ opt.value }}
     </div>
   </div>

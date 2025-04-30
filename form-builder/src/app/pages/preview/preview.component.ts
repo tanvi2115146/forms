@@ -1,5 +1,5 @@
 // preview.component.ts
-import { Component,Input , SimpleChanges } from '@angular/core';
+import { Component,Input , SimpleChanges,Output,EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TextComponent } from '../../pages/text/text.component';
 import { DropdownComponent } from '../../pages/dropdown/dropdown.component';
@@ -26,6 +26,11 @@ export class PreviewComponent {
   currentIndex:number=0;
   isPreviewRoute: boolean = false; 
   visitorId: string = '';
+
+  questionStats: { question: string, answer: string }[] = [];
+
+  @Output() statsUpdated = new EventEmitter<any[]>();
+
 
 
   constructor(private route:ActivatedRoute,private formService:FormService,private router:Router,private visitorservice:visitorservice){}
@@ -83,6 +88,22 @@ export class PreviewComponent {
       this.currentIndex--;
     }
   }
+
+
+
+  storeAnswer(answerObj: { question: string, answer: string }) {
+    const existing = this.questionStats.find(q => q.question === answerObj.question);
+    if (existing) {
+      existing.answer = answerObj.answer;
+    } else {
+      this.questionStats.push(answerObj);
+    }
+  
+    console.log('Updated questionStats:', this.questionStats);
+    this.statsUpdated.emit(this.questionStats); 
+  }
+  
+  
 
 
 }
