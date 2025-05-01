@@ -72,44 +72,44 @@ export class PreviewComponent {
     });
   }
 
-  private createNewVisitor(formId: string) {
-    const hasLeadForm = this.formFields.some(f => f.type === 'lead');
-    
-    
-    this.formFields.forEach(field => {
-      if (!field._id) {
-        field._id = uuidv4();
-      }
-      if (!field.type) {
-        field.type = 'text'; 
-      }
-    });
 
-    this.visitorservice.createVisitor(formId, this.formFields).subscribe({
-      next: (res) => {
-        // console.log("Visitor created:", res);
-        this.visitorId = res._id;
-        
-       
-        const initialStats = this.formFields.map(field => ({
-          questionId: field._id,
-          question: field.label || field.type,
-          answer: false,
-          answerText: '',
-          fieldType: field.type
-        }));
+private createNewVisitor(formId: string) {
+  const hasLeadForm = this.formFields.some(f => f.type === 'lead');
+  
+  this.formFields.forEach(field => {
+    if (!field._id) {
+      field._id = uuidv4();
+    }
+    if (!field.type) {
+      field.type = 'text'; 
+    }
+  });
 
-        
-        this.visitorservice.updateQuestionStats(this.visitorId, initialStats).subscribe({
-          next: updated => console.log("Initial stats updated:", updated),
-          error: err => console.error("Error updating stats:", err)
-        });
-      },
-      error: (err) => {
-        console.error('Error creating visitor:', err);
-      }
-    });
-  }
+  this.visitorservice.createVisitor(formId, this.formFields).subscribe({
+    next: (res) => {
+      this.visitorId = res._id;
+      
+      // Initialize question stats for all fields
+      const initialStats = this.formFields.map(field => ({
+        questionId: field._id,
+        question: field.label || field.type,
+        answer: false,
+        answerText: '',
+        fieldType: field.type
+      }));
+      
+      this.visitorservice.updateQuestionStats(this.visitorId, initialStats).subscribe({
+        next: updated => console.log("Initial stats updated:", updated),
+        error: err => console.error("Error updating stats:", err)
+      });
+    },
+    error: (err) => {
+      console.error('Error creating visitor:', err);
+    }
+  });
+}
+
+
 
   storeAnswer(answerObj: { question: string, answer: string, fieldType: string }) {
     if (!this.visitorId) {
@@ -125,7 +125,7 @@ export class PreviewComponent {
         );
   
     if (!field) {
-      console.error('Field not found in form definition');
+      console.error('Field not found');
       return;
     }
   
@@ -157,11 +157,7 @@ export class PreviewComponent {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['formFields']) {
-      console.log('Form fields updated:', this.formFields);
-    }
-  }
+
   
 
   next(){

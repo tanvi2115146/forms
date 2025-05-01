@@ -9,10 +9,19 @@ export class visitorservice {
   constructor(private http: HttpClient) {}
 
 
-  createVisitor(formId: string, formFields?: any[]) {
+  // createVisitor(formId: string, formFields?: any[]) {
+  //   return this.http.post<any>(`${this.baseUrl}/create-visitor`, { 
+  //     formId, 
+  //     formFields 
+  //   });
+  // }
+
+
+  createVisitor(formId: string, formFields?: any[], isLeadForm: boolean = false) {
     return this.http.post<any>(`${this.baseUrl}/create-visitor`, { 
       formId, 
-      formFields 
+      formFields,
+      isLeadForm // Explicitly set initial value
     });
   }
 

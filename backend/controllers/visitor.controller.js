@@ -4,10 +4,9 @@ const Visitor = require('../models/visitor.model');
 
 
 const createVisitor = async (req, res) => {
-  const { formId, formFields } = req.body;
+  const { formId, formFields, isLeadForm } = req.body;
   
   try {
-   
     const initialQuestionStats = formFields.map(field => ({
       questionId: field._id || new mongoose.Types.ObjectId().toString(),
       question: field.label || field.type,
@@ -16,9 +15,10 @@ const createVisitor = async (req, res) => {
       fieldType: field.type
     }));
 
+    
     const visitor = await Visitor.create({
       formId,
-      isLeadForm: formFields.some(f => f.type === 'lead'),
+      isLeadForm: isLeadForm || false, 
       questionStats: initialQuestionStats,
       leadForm: []
     });
@@ -33,9 +33,7 @@ const createVisitor = async (req, res) => {
   }
 };
 
-
-
-const updateQuestionStats = async (req, res) => {
+const updateQuestionStats = async (req,res) => {
   const { questionStats } = req.body;
   const { visitorId } = req.params;
 
@@ -83,20 +81,39 @@ const updateQuestionStats = async (req, res) => {
 };
 
 
+
+
+
 const submitLead = async (req, res) => {
-const { data } = req.body;
-const { visitorId } = req.params;
+  const { data } = req.body;
+  const { visitorId } = req.params;
 
-try {
-  const visitor = await Visitor.findByIdAndUpdate(visitorId, {
-    $push: { leadForm: { data } },
-    isLeadForm: true
-  }, { new: true });
+  try {
+    const visitor = await Visitor.findByIdAndUpdate(
+      visitorId,
+      {
+        $push: { leadForm: { data } },
+        isLeadForm: true
+      },
+      { new: true }
+    );
 
-  res.json(visitor);
-} catch (err) {
-  res.status(500).json({ error: err.message });
-}
+   
+    await Visitor.updateOne(
+      { _id: visitorId, "questionStats.fieldType": "lead" },
+      {
+        $set: {
+          "questionStats.$.answer": true,
+          "questionStats.$.answerText": JSON.stringify(data)
+        }
+      }
+    );
+
+    const updatedVisitor = await Visitor.findById(visitorId);
+    res.json(updatedVisitor);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 

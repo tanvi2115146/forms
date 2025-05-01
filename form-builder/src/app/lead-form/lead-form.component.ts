@@ -31,7 +31,7 @@ submitForm() {
     return;
   }
 
- 
+  
   const leadQuestionUpdate = {
     questionId: this.field._id,
     question: this.field.label,
@@ -42,15 +42,10 @@ submitForm() {
 
   this.visitorservice.updateQuestionStats(this.visitorId, [leadQuestionUpdate]).subscribe({
     next: () => {
-
-      const payload = {
-        leadForm: leadFormData,
-        isLeadForm: true
-      };
-
-      this.visitorservice.submitLead(this.visitorId, payload).subscribe({
+      
+      this.visitorservice.submitLead(this.visitorId, { data: leadFormData }).subscribe({
         next: (res) => {
-          console.log("Visitor updated with lead form and question stats:", res);
+          console.log("Lead form submitted and visitor updated:", res);
         },
         error: (err) => {
           console.error('Failed to submit lead:', err);
@@ -62,6 +57,5 @@ submitForm() {
     }
   });
 }
-
 
 }

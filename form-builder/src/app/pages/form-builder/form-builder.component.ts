@@ -141,18 +141,18 @@ export class FormBuilderComponent {
   }
 
 
-// Add this method to your FormBuilderComponent
+
+
 saveFormWithQuestions() {
   if (!this.formId) {
     alert('Form ID is missing. Please create a form first.');
     return;
   }
 
-  // First save the form structure
   this.formService.saveForm(this.userId, this.formId, this.formName, this.formFields).subscribe({
     next: () => {
-      // Then create visitor with initial question stats
-      this.visitorservice.createVisitor(this.formId, this.formFields).subscribe({
+    
+      this.visitorservice.createVisitor(this.formId, this.formFields, false).subscribe({
         next: (visitor) => {
           console.log('Form and initial questions saved', visitor);
           alert('Form saved successfully');
