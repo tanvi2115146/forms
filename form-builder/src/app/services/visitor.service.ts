@@ -9,8 +9,11 @@ export class visitorservice {
   constructor(private http: HttpClient) {}
 
 
-  createVisitor(formId: string) {
-    return this.http.post<any>(`${this.baseUrl}/create-visitor`, { formId });
+  createVisitor(formId: string, formFields?: any[]) {
+    return this.http.post<any>(`${this.baseUrl}/create-visitor`, { 
+      formId, 
+      formFields 
+    });
   }
 
   updateQuestionStats(visitorId: string, questionStats: any[]) {

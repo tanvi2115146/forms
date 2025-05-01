@@ -1,13 +1,9 @@
 
 
-
    <label>{{ field.label }}</label>
   <select [(ngModel)]="answer" (change)="onInputChange()">
-    
-    <option *ngFor="let opt of field.options" [value]="opt.value">
-      {{ opt.value }}
-    </option>
-  </select>
-  
-
+  <option *ngFor="let opt of field.options" [value]="opt.value">
+    {{ opt.value }}
+  </option>
+</select>
   

@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import{Clipboard} from '@angular/cdk/clipboard';
 import {Router} from '@angular/router';
+import { visitorservice } from '../../services/visitor.service';
 
 
 @Component({
@@ -68,7 +69,7 @@ export class FormBuilderComponent {
     private auth: AuthService,
     private route: ActivatedRoute,
     private clipboard:Clipboard,
-    private router:Router
+    private router:Router,private visitorservice:visitorservice
    
   ) {
     this.userId = this.auth.getUserId();
@@ -138,4 +139,36 @@ export class FormBuilderComponent {
     );
     window.open(url, '_blank');
   }
+
+
+// Add this method to your FormBuilderComponent
+saveFormWithQuestions() {
+  if (!this.formId) {
+    alert('Form ID is missing. Please create a form first.');
+    return;
+  }
+
+  // First save the form structure
+  this.formService.saveForm(this.userId, this.formId, this.formName, this.formFields).subscribe({
+    next: () => {
+      // Then create visitor with initial question stats
+      this.visitorservice.createVisitor(this.formId, this.formFields).subscribe({
+        next: (visitor) => {
+          console.log('Form and initial questions saved', visitor);
+          alert('Form saved successfully');
+        },
+        error: (err) => {
+          console.error('Error saving visitor questions:', err);
+          alert('Form saved but question tracking failed');
+        }
+      });
+    },
+    error: (err) => {
+      console.error('Error saving form:', err);
+      alert('Failed to save form. Please try again.');
+    }
+  });
+}
+
+
 }

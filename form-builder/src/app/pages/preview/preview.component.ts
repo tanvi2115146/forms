@@ -9,7 +9,7 @@ import { FormService } from '../../services/form.service';
 import { LeadFormComponent } from '../../lead-form/lead-form.component';
 import { CheckboxComponent } from '../../checkbox/checkbox.component';
 import { visitorservice } from '../../services/visitor.service';
-
+import { v4 as uuidv4 } from 'uuid';
 
 
 @Component({
@@ -27,13 +27,24 @@ export class PreviewComponent {
   isPreviewRoute: boolean = false; 
   visitorId: string = '';
 
-  questionStats: { question: string, answer: string }[] = [];
+ 
+  questionStats: {
+    questionId: string;
+    question: string;
+    answer: boolean;
+    answerText: string;
+    fieldType: string;
+  }[] = [];
 
   @Output() statsUpdated = new EventEmitter<any[]>();
 
 
 
-  constructor(private route:ActivatedRoute,private formService:FormService,private router:Router,private visitorservice:visitorservice){}
+  constructor(private route:ActivatedRoute,
+    private formService:FormService,
+    private router:Router,
+    private visitorservice:visitorservice){}
+
 
 
 
@@ -41,38 +52,110 @@ export class PreviewComponent {
     const currentUrl = this.router.url;
     this.isPreviewRoute = currentUrl.includes('/preview/');
     const formId = this.route.snapshot.paramMap.get('formId');
-  
+
     if (this.isPreviewOnly && formId) {
-      this.formService.getFormByFormId(formId).subscribe({
-        next: (res: any) => {
-          this.formFields = res.fields;
-          console.log('Fetched fields:', this.formFields);
-  
-          const hasLeadForm = this.formFields.some(f => f.type === 'lead');
-  
-          this.visitorservice.createVisitor(formId!).subscribe({
-            next: (res) => {
-              console.log("Visitor created:", res);
-              this.visitorId = res._id;
-        
-              const hasLeadForm = this.formFields.some(f => f.type === 'lead');
-              const stat = { question: 'isLeadForm', answer: hasLeadForm, answerText: '' };
-        
-              this.visitorservice.updateQuestionStats(this.visitorId, [stat]).subscribe({
-                next: updated => console.log("Visitor updated with isLeadForm:", updated)
-              });
-            }
-          });
-            },
-            error: (err) => {
-              console.error('Error creating visitor:', err);
-            }
-          });
-       
+      this.loadFormAndCreateVisitor(formId);
     }
   }
+
+  private loadFormAndCreateVisitor(formId: string) {
+    this.formService.getFormByFormId(formId).subscribe({
+      next: (res: any) => {
+        this.formFields = res.fields || [];
+        console.log('Fetched fields:', this.formFields);
+        this.createNewVisitor(formId);
+      },
+      error: (err) => {
+        console.error('Error loading form:', err);
+        this.formFields = [];
+      }
+    });
+  }
+
+  private createNewVisitor(formId: string) {
+    const hasLeadForm = this.formFields.some(f => f.type === 'lead');
+    
+    
+    this.formFields.forEach(field => {
+      if (!field._id) {
+        field._id = uuidv4();
+      }
+      if (!field.type) {
+        field.type = 'text'; 
+      }
+    });
+
+    this.visitorservice.createVisitor(formId, this.formFields).subscribe({
+      next: (res) => {
+        // console.log("Visitor created:", res);
+        this.visitorId = res._id;
+        
+       
+        const initialStats = this.formFields.map(field => ({
+          questionId: field._id,
+          question: field.label || field.type,
+          answer: false,
+          answerText: '',
+          fieldType: field.type
+        }));
+
+        
+        this.visitorservice.updateQuestionStats(this.visitorId, initialStats).subscribe({
+          next: updated => console.log("Initial stats updated:", updated),
+          error: err => console.error("Error updating stats:", err)
+        });
+      },
+      error: (err) => {
+        console.error('Error creating visitor:', err);
+      }
+    });
+  }
+
+  storeAnswer(answerObj: { question: string, answer: string, fieldType: string }) {
+    if (!this.visitorId) {
+      console.error('Visitor ID not found!');
+      return;
+    }
+  
+    const field = this.isPreviewRoute 
+      ? this.formFields[this.currentIndex]
+      : this.formFields.find(f => 
+          f.label === answerObj.question && 
+          f.type === answerObj.fieldType
+        );
+  
+    if (!field) {
+      console.error('Field not found in form definition');
+      return;
+    }
+  
+   
+    const updatePayload = {
+      questionId: field._id,
+      question: answerObj.question,
+      answer: answerObj.answer !== '', 
+      answerText: answerObj.answer,
+      fieldType: answerObj.fieldType
+    };
   
 
+    this.visitorservice.updateQuestionStats(this.visitorId, [updatePayload]).subscribe({
+      next: (updated: any) => {
+        console.log("Question updated:", updated);
+        
+        const existingIndex = this.questionStats.findIndex(q => q.questionId === field._id);
+        if (existingIndex >= 0) {
+          this.questionStats[existingIndex] = updatePayload;
+        } else {
+          this.questionStats.push(updatePayload);
+        }
+        
+        
+        this.statsUpdated.emit(this.questionStats);
+      },
+      error: (err: any) => console.error("Error updating question:", err)
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['formFields']) {
@@ -93,20 +176,6 @@ export class PreviewComponent {
       this.currentIndex--;
     }
   }
-
-  
-  storeAnswer(answerObj: { question: string, answer: string }) {
-    const newStat = [{
-      question: answerObj.question,
-      answer: true,
-      answerText: answerObj.answer
-    }];
-  
-    this.visitorservice.updateQuestionStats(this.visitorId, newStat).subscribe({
-      next: updated => console.log("question update:", updated)
-    });
-  }
-  
 
 
 }

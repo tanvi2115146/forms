@@ -20,6 +20,9 @@ agreed: boolean = false;
 
 constructor(private visitorservice: visitorservice) {}
 
+
+
+
 submitForm() {
   const leadFormData = Object.entries(this.leadData).map(([fieldName, value]) => ({ fieldName, value }));
 
@@ -28,23 +31,37 @@ submitForm() {
     return;
   }
 
-  const payload = {
-    leadForm: leadFormData,
+ 
+  const leadQuestionUpdate = {
+    questionId: this.field._id,
+    question: this.field.label,
+    answer: true,
+    answerText: JSON.stringify(this.leadData),
+    fieldType: 'lead'
   };
 
-  this.visitorservice.submitLead(this.visitorId, payload).subscribe({
-    next: (res) => {
-      console.log("Visitor updated with lead form and question stats:", res);
+  this.visitorservice.updateQuestionStats(this.visitorId, [leadQuestionUpdate]).subscribe({
+    next: () => {
+
+      const payload = {
+        leadForm: leadFormData,
+        isLeadForm: true
+      };
+
+      this.visitorservice.submitLead(this.visitorId, payload).subscribe({
+        next: (res) => {
+          console.log("Visitor updated with lead form and question stats:", res);
+        },
+        error: (err) => {
+          console.error('Failed to submit lead:', err);
+        }
+      });
     },
     error: (err) => {
-      console.error('Failed to submit lead:', err);
+      console.error('Failed to update lead question:', err);
     }
   });
 }
-
-
-
-
 
 
 }

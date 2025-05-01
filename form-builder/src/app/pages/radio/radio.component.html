@@ -1,6 +1,6 @@
 
 
-  <div *ngIf="field">
+   <div *ngIf="field">
     <label>{{ field.label }}</label>
     <div *ngFor="let opt of field.options">
       <input
@@ -13,4 +13,3 @@
       {{ opt.value }}
     </div>
   </div>
-  
