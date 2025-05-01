@@ -9,15 +9,16 @@
   
   
     <div *ngIf="formFields.length > 0 && isPreviewRoute">
-      <label>{{ formFields[currentIndex].label }}</label>
-  
+   
       <app-text 
         *ngIf="formFields[currentIndex].type === 'text'" 
+        [label]="formFields[currentIndex].label"
         [placeholder]="formFields[currentIndex].placeholder"
         (answerSelected)="storeAnswer($event)">
-       
       </app-text>
-  
+
+
+
       <app-dropdown 
         *ngIf="formFields[currentIndex].type === 'dropdown'" 
         [field]="formFields[currentIndex]"
@@ -54,13 +55,16 @@
 
     <div *ngIf="formFields.length > 0 && !isPreviewRoute">
       <div *ngFor="let field of formFields">
-        <label>{{ field.label }}</label>
-  
+       
+
+
         <app-text 
-          *ngIf="field.type === 'text'" 
-          [placeholder]="field.placeholder"
-          (answerSelected)="storeAnswer($event)">
-        </app-text>
+        *ngIf="field.type === 'text'" 
+        [label]="field.label"
+        [placeholder]="field.placeholder"
+        (answerSelected)="storeAnswer($event)">
+      </app-text>
+
   
         <app-dropdown 
           *ngIf="field.type === 'dropdown'" 

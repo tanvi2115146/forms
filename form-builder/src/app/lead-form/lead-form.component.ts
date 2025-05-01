@@ -32,7 +32,6 @@ submitForm() {
     leadForm: leadFormData,
   };
 
-
   this.visitorservice.submitLead(this.visitorId, payload).subscribe({
     next: (res) => {
       console.log("Visitor updated with lead form and question stats:", res);

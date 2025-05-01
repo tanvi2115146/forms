@@ -1,6 +1,16 @@
-<div *ngIf="field">
+
+
+  <div *ngIf="field">
+    <label>{{ field.label }}</label>
     <div *ngFor="let opt of field.options">
-      <input type="radio" [name]="field.label" [value]="opt.value"   [(ngModel)]="answer"
-      (change)="onInputChange()" /> {{ opt.value }}
+      <input
+        type="radio"
+        [name]="field.label"
+        [value]="opt.value"
+        [(ngModel)]="answer"
+        (change)="onInputChange()" 
+      /> 
+      {{ opt.value }}
     </div>
   </div>
+  

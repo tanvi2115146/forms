@@ -103,7 +103,7 @@ export class PreviewComponent {
     }];
   
     this.visitorservice.updateQuestionStats(this.visitorId, newStat).subscribe({
-      next: updated => console.log("Live question update:", updated)
+      next: updated => console.log("question update:", updated)
     });
   }
   
