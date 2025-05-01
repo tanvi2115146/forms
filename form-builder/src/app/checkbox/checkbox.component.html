@@ -1,4 +1,20 @@
-<div class="checkbox-field">
+<!-- <div class="checkbox-field">
     <input type="checkbox" [id]="field.labelText" />
     <label [for]="field.labelText">{{ field.labelText }}</label>
+  </div> -->
+
+
+
+
+
+
+
+  <div class="checkbox-field">
+    <label>
+      <input type="checkbox" 
+             [(ngModel)]="isChecked"
+             (change)="onInputChange()"
+             [name]="field.labelText || field.label" />
+      {{ field.labelText || field.label }}
+    </label>
   </div>

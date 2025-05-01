@@ -40,7 +40,14 @@
         >
       </app-lead-form>
 
-  
+      <app-checkbox 
+      *ngIf="formFields[currentIndex].type === 'checkbox'" 
+      [field]="formFields[currentIndex]"
+      (answerSelected)="storeAnswer($event)">
+      
+    </app-checkbox>
+
+
       <div class="navigation-buttons">
         <button (click)="prev()" [disabled]="currentIndex === 0">Previous</button>
         <button (click)="next()" [disabled]="currentIndex === formFields.length - 1">Next</button>
@@ -89,7 +96,7 @@
         <app-checkbox 
           *ngIf="field.type === 'checkbox'" 
           [field]="field"
-          >
+          (answerSelected)="storeAnswer($event)">
         </app-checkbox>
  
         <br><br>
