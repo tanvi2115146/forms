@@ -79,4 +79,37 @@
   <button (click)="saveForm()">Save Form</button>
   <button (click)="copyLink()">CopyLink</button>
   <button (click)="goLive()">Go Live</button>
+  <br><br>
+
+
+
+<!-- Add this to your template -->
+<div class="webhook-configuration">
+  <h3>Webhook Configuration</h3>
   
+  <div class="form-group">
+    <label>Webhook URL:</label>
+    <input [(ngModel)]="webhookConfig.url" placeholder="https://webhook.site/your-url" class="form-control">
+  </div>
+  
+  <div class="form-check">
+    <input type="checkbox" [(ngModel)]="webhookConfig.events.lead" id="leadCheckbox" class="form-check-input">
+    <label for="leadCheckbox" class="form-check-label">Enable Lead Webhook</label>
+  </div>
+  
+  <div class="form-check">
+    <input type="checkbox" [(ngModel)]="webhookConfig.events.visit" id="visitCheckbox" class="form-check-input">
+    <label for="visitCheckbox" class="form-check-label">Enable Visit Webhook</label>
+  </div>
+  
+  <button (click)="setupWebhook()" class="btn btn-primary">Save Configuration</button>
+  
+  <div class="test-buttons mt-3">
+    <button (click)="testLeadWebhook()" [disabled]="!webhookConfig.events.lead" class="btn btn-secondary">
+      Test Lead Webhook
+    </button>
+    <button (click)="testVisitWebhook()" [disabled]="!webhookConfig.events.visit" class="btn btn-secondary">
+      Test Visit Webhook
+    </button>
+  </div>
+</div>

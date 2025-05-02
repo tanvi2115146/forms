@@ -1,24 +1,25 @@
 
 
-<form (ngSubmit)="submitForm()">
+ <form (ngSubmit)="submitForm()">
   <div *ngFor="let subfield of field.subfields">
     <label>{{ subfield.label }}</label>
-    <input [(ngModel)]="leadData[subfield.label]" name="{{ subfield.label }}" [placeholder]="subfield.placeholder" required />
+    <input 
+      [(ngModel)]="leadData[subfield.label]"
+      [name]="subfield.label"
+      [placeholder]="subfield.placeholder"
+      required
+    >
   </div>
 
-  <div style="margin-top: 10px;">
+  <div class="terms-checkbox">
     <label>
-      <input type="checkbox" [(ngModel)]="agreed" name="terms" />
+      <input type="checkbox" [(ngModel)]="agreed" name="terms" required>
       {{ field.labelText || 'I agree to the terms' }}
     </label>
   </div>
 
-  <button type="submit" style="margin-top: 10px;">Submit</button>
+  <button type="submit" [disabled]="!agreed">Submit</button>
 </form>
-
-
-
-
 
 
 

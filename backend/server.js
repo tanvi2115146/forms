@@ -5,8 +5,9 @@ const bodyParser=require('body-parser');
 const cors = require('cors');
 const authRoutes = require('./routes/user.routes');
 const authenticateToken = require('./middleware/authMiddleware');
-const formRoute =require('./routes/form.route')
-const visitorRoute=require('./routes/visitor.route')
+const formRoute =require('./routes/form.route');
+const visitorRoute=require('./routes/visitor.route');
+const webhookRoutes = require('./routes/webhook.route');
 
 const app=express();
 
@@ -19,7 +20,8 @@ app.use(bodyParser.json());
 
 app.use('/auth',authRoutes);
 app.use('/forms',formRoute);
-app.use('/visitor',visitorRoute)
+app.use('/visitor',visitorRoute);
+app.use('/webhook', webhookRoutes);
 
 
 const port=3000;
