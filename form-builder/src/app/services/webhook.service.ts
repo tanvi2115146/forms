@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError,tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class WebhookService {
@@ -9,8 +10,8 @@ export class WebhookService {
 
   constructor(private http: HttpClient) {}
 
-
   createWebhook(formId: string, url: string, events: any = { lead: true, visit: true }) {
+    console.log('Creating webhook config:', { formId, url, events });
     return this.http.post(`${this.baseUrl}/create`, { formId, url, events });
   }
 
@@ -18,12 +19,14 @@ export class WebhookService {
     return this.http.get<any>(`${this.baseUrl}/config/${formId}`);
   }
 
-  triggerLeadWebhook(formId: string, leadData: any) {
-    console.log('Attempting to trigger lead webhook for form:', formId);
+  triggerLeadWebhook(formId: string, leadData: any): Observable<any> {
+    console.log('Triggering lead webhook with data:', leadData);
+    
     return this.http.post(`${this.baseUrl}/trigger/lead`, { 
       formId, 
       data: leadData 
     }).pipe(
+      tap(response => console.log('Lead webhook response:', response)),
       catchError((error: HttpErrorResponse) => {
         console.error('Lead webhook error:', error);
         throw new Error(
@@ -35,28 +38,23 @@ export class WebhookService {
     );
   }
 
-
-
-
-triggerVisitWebhook(formId: string, visitData: any) {
-  console.log('Triggering visit webhook for form:', formId);
-  console.log('Payload data:', visitData);
-  
-  return this.http.post(`${this.baseUrl}/trigger/visit`, { 
-    formId, 
-    data: visitData 
-  }).pipe(
-    tap(response => console.log('Webhook response:', response)),
-    catchError((error: HttpErrorResponse) => {
-      console.error('Visit webhook error:', error);
-      throw new Error(
-        error.error?.error || 
-        error.error?.message || 
-        'Failed to trigger visit webhook'
-      );
-    })
-  );
-}
-
-
+  triggerVisitWebhook(formId: string, visitData: any): Observable<any> {
+    console.log('Triggering visit webhook for form:', formId);
+    console.log('Payload data:', visitData);
+    
+    return this.http.post(`${this.baseUrl}/trigger/visit`, { 
+      formId, 
+      data: visitData 
+    }).pipe(
+      tap(response => console.log('Visit webhook response:', response)),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Visit webhook error:', error);
+        throw new Error(
+          error.error?.error || 
+          error.error?.message || 
+          'Failed to trigger visit webhook'
+        );
+      })
+    );
+  }
 }
