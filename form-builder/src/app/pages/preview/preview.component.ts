@@ -111,7 +111,7 @@ export class PreviewComponent {
       next: (res) => {
         this.visitorId = res._id;
         
-        // Initialize question stats for all fields
+        
         const initialStats = this.formFields.map(field => ({
           questionId: field._id,
           question: field.label || field.type,
@@ -120,13 +120,13 @@ export class PreviewComponent {
           fieldType: field.type
         }));
         
-        this.questionStats = initialStats; // Store locally
+        this.questionStats = initialStats; 
         
         this.visitorservice.updateQuestionStats(this.visitorId, initialStats).subscribe({
           next: updated => {
             console.log("Initial stats updated:", updated);
             
-            // Trigger initial visit webhook with empty answers
+           
             if (this.webhookConfig.events.visit) {
               this.webhookService.triggerVisitWebhook(this.formId, this.questionStats)
                 .subscribe({
@@ -172,7 +172,7 @@ export class PreviewComponent {
       fieldType: answerObj.fieldType
     };
 
-    // Update local state first
+
     const existingIndex = this.questionStats.findIndex(q => q.questionId === field._id);
     if (existingIndex >= 0) {
       this.questionStats[existingIndex] = updatePayload;
@@ -180,15 +180,14 @@ export class PreviewComponent {
       this.questionStats.push(updatePayload);
     }
     
-    // Update visitor service
     this.visitorservice.updateQuestionStats(this.visitorId, [updatePayload]).subscribe({
       next: (updated: any) => {
         console.log("Question updated in database:", updated);
         
-        // Emit updated stats
+        
         this.statsUpdated.emit([...this.questionStats]);
         
-        // Trigger webhook with CURRENT state if configured
+        
         if (this.formId && this.webhookConfig.events.visit) {
           console.log('Triggering visit webhook with updated data:', this.questionStats);
           this.webhookService.triggerVisitWebhook(this.formId, this.questionStats)

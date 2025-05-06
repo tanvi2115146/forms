@@ -1,7 +1,7 @@
-
-
 const Webhook = require('../models/webhook.model');
 const axios = require('axios');
+const MailerLiteService = require('../service/mailerLite.service');
+const mailerLite = new MailerLiteService(process.env.MAILERLITE_API_KEY);
 
 
 const createWebhook = async (req, res) => {
@@ -20,7 +20,6 @@ const createWebhook = async (req, res) => {
 
 
 
-
 const triggerLeadWebhook = async (req, res) => {
   try {
     const { formId, data } = req.body;
@@ -32,17 +31,42 @@ const triggerLeadWebhook = async (req, res) => {
       return res.status(400).json({ error: "Lead webhook not enabled" });
     }
 
-    // Verify data structure
     if (!data['First Name'] || !data['Email']) {
-      console.warn('Incomplete lead data received:', data);
+      return res.status(400).json({ error: "Missing required fields (First Name and Email)" });
     }
 
-    const response = await axios.post(webhook.url, {
-      eventType: 'lead',
-      timestamp: new Date(),
-      data 
-    });
-    
+    try {
+      const mailerLiteResponse = await mailerLite.addSubscriber(
+        data['Email'],
+        data['First Name'],
+        process.env.MAILERLITE_GROUP_ID,
+        {
+          // 'name':data['Name'] || 'Tanvi',
+         
+          q1_title: data['Q1_Title'] || 'whats your favorite color ?',
+          q1_answer: data['Q1_Answer'] || 'Black',
+          q2_title: data['Q2_Title'] || 'whats the day today ?',
+          q2_answer: data['Q2_Answer'] || 'Tuesday',
+
+        }
+      );
+      console.log('MailerLite success:', mailerLiteResponse);
+    } catch (Error) {
+      console.error('MailerLite failed:', Error.response?.data || Error.message);
+      
+    }
+
+
+    if (webhook.url) {
+      const response = await axios.post(webhook.url, {
+        eventType: 'lead',
+        timestamp: new Date(),
+        ...data 
+      });
+      
+      console.log('Webhook success:', response.data);
+    }
+
     res.json({ 
       success: true,
       sentData: data 
@@ -56,9 +80,6 @@ const triggerLeadWebhook = async (req, res) => {
     });
   }
 };
-
-
-
 
 
 const triggerVisitWebhook = async (req, res) => {
@@ -80,11 +101,11 @@ const triggerVisitWebhook = async (req, res) => {
       return res.status(400).json({ error: "Webhook URL not configured" });
     }
 
-    // Actually send data to the webhook URL
+ 
     const response = await axios.post(webhook.url, {
       eventType: 'visit',
       timestamp: new Date(),
-      data
+      ...data
     });
 
     res.json({ 

@@ -25,7 +25,7 @@ export class LeadFormComponent {
   ) {}
 
   ngOnInit() {
-    // Initialize leadData with empty values for all subfields
+    
     if (this.field && this.field.subfields) {
       this.field.subfields.forEach((subfield: any) => {
         this.leadData[subfield.label] = '';
@@ -33,15 +33,14 @@ export class LeadFormComponent {
     }
   }
 
+
   submitForm() {
     if (!this.field || !this.field.subfields) {
       console.error('Invalid lead form configuration');
       return;
     }
   
-    console.log('Submitting lead data:', this.leadData);
-    
-    // Validate required fields
+
     let isValid = true;
     for (const subfield of this.field.subfields) {
       if (!this.leadData[subfield.label]) {
@@ -54,17 +53,18 @@ export class LeadFormComponent {
       alert('Please fill all required fields and agree to the terms.');
       return;
     }
-
+  
     if (!this.visitorId) {
       console.error('Visitor ID not found!');
       return;
     }
-
+  
+  
     const leadFormData = Object.entries(this.leadData).map(([fieldName, value]) => ({ 
       fieldName, 
       value 
     }));
-
+  
     const leadQuestionUpdate = {
       questionId: this.field._id,
       question: this.field.label,
@@ -72,26 +72,32 @@ export class LeadFormComponent {
       answerText: JSON.stringify(this.leadData),
       fieldType: 'lead'
     };
-
-    // First update question stats
+  
     this.visitorservice.updateQuestionStats(this.visitorId, [leadQuestionUpdate]).subscribe({
       next: () => {
-        // Then submit lead data to database
         this.visitorservice.submitLead(this.visitorId, { data: leadFormData }).subscribe({
           next: (res) => {
             console.log("Lead form submitted and visitor updated:", res);
             
-            // Trigger lead webhook with actual filled data
+            
+            const webhookData: any = {};
+            
+            
+            Object.entries(this.leadData).forEach(([key, value]) => {
+              webhookData[key] = value;
+            });
+  
+           
             if (this.formId) {
-              console.log('Triggering lead webhook with data:', this.leadData);
-              this.webhookService.triggerLeadWebhook(this.formId, this.leadData)
-                .subscribe({
-                  next: (webhookRes) => {
-                    console.log('Lead webhook triggered with submitted data', webhookRes);
-                    alert('Form submitted successfully!');
-                  },
-                  error: (err) => console.error('Lead webhook error', err)
-                });
+              this.webhookService.triggerLeadWebhook(
+                this.formId, 
+                webhookData
+              ).subscribe({
+                next: (webhookRes) => {
+                  alert('Form submitted successfully!');
+                },
+                error: (err) => console.error('Lead webhook error', err)
+              });
             }
           },
           error: (err) => {

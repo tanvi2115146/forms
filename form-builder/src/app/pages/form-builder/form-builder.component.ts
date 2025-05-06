@@ -196,13 +196,13 @@ export class FormBuilderComponent {
 
   saveForm() {
     if (!this.formId) {
-      this.formId = uuidv4(); // Ensure formId exists
+      this.formId = uuidv4(); 
     }
     
     this.formService.saveForm(this.userId, this.formId, this.formName, this.formFields).subscribe({
       next: () => {
         alert('Form saved successfully');
-        // Update URL if this is a new form
+      
         if (!this.route.snapshot.paramMap.get('formId')) {
           this.router.navigate(['/form-builder', this.formId]);
         }
@@ -274,29 +274,43 @@ setupWebhook() {
 }
 
 
+
 async testLeadWebhook() {
   if (!this.webhookConfig.events.lead) {
     alert('Lead webhook is not enabled in configuration');
     return;
   }
 
+ 
+  const testData: any = {};
+
+ 
+  this.formFields.forEach(field => {
+    if (field.type !== 'lead') {
+      testData[field.label || field.type] = false;
+    }
+  });
+
+
   const leadField = this.formFields.find(f => f.type === 'lead');
-  if (!leadField) {
-    alert('No lead form field exists in this form');
-    return;
+  if (leadField) {
+    leadField.subfields.forEach((subfield: any) => {
+      if (subfield.label === 'First Name') {
+        testData[subfield.label] = 'Test User';
+      } else if (subfield.label === 'Email') {
+        testData[subfield.label] = 'test@example.com';
+      } else {
+        testData[subfield.label] = 'Test Value';
+      }
+    });
   }
 
-  const testLeadData = {
-    'First Name': 'Test First Name',
-    'Email': 'test@example.com'
-  };
-
-  console.log('Triggering lead webhook with:', testLeadData);
+  console.log('Triggering lead webhook with:', testData);
 
   try {
     const response = await this.webhookService.triggerLeadWebhook(
       this.formId, 
-      testLeadData
+      testData
     ).toPromise();
     
     console.log('Lead webhook response:', response);
@@ -316,6 +330,7 @@ async testLeadWebhook() {
     alert(`Error: ${errorMessage}`);
   }
 }
+
 
 testVisitWebhook() {
   if (!this.webhookConfig.events.visit) {
@@ -343,9 +358,5 @@ testVisitWebhook() {
       }
     });
 }
-
-
-
-
 
 }
