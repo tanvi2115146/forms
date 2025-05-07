@@ -1,0 +1,97 @@
+.dashboard-wrapper {
+    min-height: 100vh;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #4c547c 0%, #362256 100%);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .dashboard-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  
+  .dashboard-container h1,
+  .dashboard-container h2 {
+    text-align: center;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    margin-bottom: 1.5rem;
+  }
+  
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 2rem;
+  }
+  
+  .create-btn {
+    background: #00c9a7;
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .logout-btn {
+    background: #ff6b6b;
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .create-btn:hover,
+  .logout-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+  
+  .form-card {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .form-info p {
+    margin: 0.3rem 0;
+    font-size: 1rem;
+  }
+  
+  .edit-btn {
+    background: #ffffff;
+    color: #4c547c;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .edit-btn:hover {
+    background: rgba(255, 255, 255, 0.85);
+    transform: translateY(-2px);
+  }
+  

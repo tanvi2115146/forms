@@ -1,21 +1,24 @@
-<h1>Welcome</h1>
-<button (click)="createNewForm()">Create Form</button>
-<button (click)="onLogout()"> logout</button>
+   
+  <div class="dashboard-container"> 
+   <div class="dashboard-wrapper">
+      <h1>Welcome At Dashboard</h1>
 
+    <div class="action-buttons">
+      <button (click)="createNewForm()">Create Form</button>
+      <button (click)="onLogout()"> logout</button>
+    </div>
 
-<h2>Your Forms:</h2>
-<!-- <ul *ngIf="forms.length > 0">
-  <li *ngFor="let form of forms">
-    <a [routerLink]="['/build', form.formId]">Form ID: {{ form.formId }}</a>
-  </li>
-</ul> -->
+      <h2>Your Forms:</h2>
+      <div *ngFor="let form of forms" class="form-card">
 
-<div *ngFor="let form of forms" class="form-card">
-  <p><strong>form Name:</strong>{{form.formName}}</p>
-  <p><strong>formID:</strong>{{form.formId}}</p>
-  <button (click)="editForm(form.formId)">Edit Form</button>
-</div>
+      <div class="form-info">
+        <p><strong>form Name : </strong>{{form.formName}}</p>
+        <p><strong>formID : </strong>{{form.formId}}</p>
+      </div>
 
-<p *ngIf="forms.length === 0">No forms found.</p>
+        <button (click)="editForm(form.formId)" class="edit-btn">Edit Form</button>
+      </div>
 
-
+      <p *ngIf="forms.length === 0">No forms found.</p>
+    </div>
+  </div>

@@ -1,144 +1,338 @@
-/* 
-  .form-builder {
-    display: flex;
-    gap: 20px;
+.form-builder {
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #4c547c 0%, #362256 100%);
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  gap: 30px;
+}
+
+/* .form-builder .sidebar {
+  flex: 0 0 350px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+} */
+
+.form-builder .sidebar {
+  flex: 0 0 350px;
+  background: rgba(30, 30, 60, 0.8); /* Darker background */
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+.form-builder .sidebar h2,.form-builder .sidebar h3 {
+  color: #a5b4fc; /* Soft purple for headings */
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(165, 180, 252, 0.3);
+  padding-bottom: 0.5rem;
+}
+
+.form-builder .preview {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+.form-builder h3, 
+.form-builder h4, 
+.form-builder h5 {
+  color: white;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  margin-bottom: 1.5rem;
+}
+
+.form-name {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.form-name h3 {
+  margin-bottom: 0.5rem;
+}
+
+.form-builder button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.form-builder button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.form-builder input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: white;
+  width: 90%;
+  margin-bottom: 1rem;
+}
+
+.form-builder input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.edit-panel {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.edit-panel label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+/* Webhook Configuration Section */
+.webhook-configuration {
+  background: rgba(40, 42, 80, 0.8); 
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-top: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.webhook-configuration h3 {
+  color: #a5b4fc; /* Soft purple */
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(165, 180, 252, 0.3);
+  font-size: 1.8rem;
+}
+
+/* Form Elements */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #a5b4fc;
+  box-shadow: 0 0 0 3px rgba(165, 180, 252, 0.2);
+}
+
+/* Checkbox Styles */
+.form-check {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.form-check-input {
+  width: 18px;
+  height: 18px;
+  margin-right: 0.75rem;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  appearance: none;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.form-check-input:checked {
+  background: #a5b4fc;
+  border-color: #a5b4fc;
+}
+
+.form-check-input:checked::after {
+  content: '✓';
+  position: absolute;
+  color: #1e1e3c;
+  font-size: 0.8rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.form-check-label {
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Button Styles */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 0.95rem;
+}
+
+.btn-primary {
+  background: #a5b4fc;
+  color: #1e1e3c;
+}
+
+.btn-primary:hover {
+  background: #b8c2ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(165, 180, 252, 0.3);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  margin-right: 0.75rem;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.btn-secondary:disabled {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.4);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Test Buttons Container */
+.test-buttons {
+  display: flex;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .test-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
   }
   
-  .sidebar {
-    background: #f4f4f4;
-    padding: 15px;
-    width: 250px;
+  .btn-secondary {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
   }
-  
-  .edit-panel {
-    background: #e6f0ff;
-    margin-top: 20px;
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  .edit-panel input {
-    margin-bottom: 10px;
-    width: 100%;
-  }
-   */
+}
 
 
+.form-builder-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
 
-   .form-builder {
-    display: flex;
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    gap: 20px;
-  }
-  
-  .sidebar {
-    width: 300px;
-    background-color: #f2f7ff;
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-  }
-  
-  .sidebar h3 {
-    margin-bottom: 15px;
-  }
-  
-  .sidebar button {
-    display: inline-block;
-    margin: 5px 5px 10px 0;
-    padding: 8px 12px;
-    font-size: 14px;
-    cursor: pointer;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
-  }
-  
-  .sidebar button:hover {
-    background-color: #0056b3;
-  }
-  
-  .edit-panel {
-    background-color: #dbeeff;
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 8px;
-  }
-  
-  .edit-panel label {
-    font-weight: bold;
-    display: block;
-    margin-top: 10px;
-  }
-  
-  .edit-panel input {
-    width: 100%;
-    padding: 6px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .edit-panel button {
-    margin-top: 5px;
-    padding: 4px 8px;
-    font-size: 12px;
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 5px;
-  }
-  
-  .edit-panel button:hover {
-    background-color: #c82333;
-  }
-  
-  .preview {
-    flex: 1;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #fafafa;
-  }
-  
-  .preview h3 {
-    margin-bottom: 20px;
-  }
-  
-  .preview label {
-    display: block;
-    margin: 10px 0 5px;
-    font-weight: bold;
-  }
-  
-  .preview input[type="text"],
-  .preview select {
-    padding: 6px;
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .preview input[type="radio"] {
-    margin-right: 6px;
-  }
-  
-  button.save-btn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    background-color: green;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  
-  button.save-btn:hover {
-    background-color: darkgreen;
-  }
-  
+.form-builder-actions button {
+  padding: 12px 28px;
+  font-weight: bold;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+}
+
+/* Save Form button */
+.form-builder-actions button:nth-child(1) {
+  background: linear-gradient(135deg, #00c9a7 0%, #00a78e 100%);
+  color: white;
+}
+
+/* Copy Link button */
+.form-builder-actions button:nth-child(2) {
+  background: linear-gradient(135deg, #845ec2 0%, #6c4da8 100%);
+  color: white;
+}
+
+/* Go Live button */
+.form-builder-actions button:nth-child(3) {
+  background: linear-gradient(135deg, #ff6b6b 0%, #e84a5f 100%);
+  color: white;
+}
+
+/* Hover effects */
+.form-builder-actions button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0.95;
+}
+
+/* Active/pressed effect */
+.form-builder-actions button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Add icons using pseudo-elements */
+.form-builder-actions button:nth-child(1)::before {
+  content: "💾";
+  margin-right: 8px;
+}
+
+.form-builder-actions button:nth-child(2)::before {
+  content: "🔗";
+  margin-right: 8px;
+}
+
+.form-builder-actions button:nth-child(3)::before {
+  content: "🚀";
+  margin-right: 8px;
+}

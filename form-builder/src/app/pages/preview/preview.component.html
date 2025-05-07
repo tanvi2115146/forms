@@ -1,6 +1,6 @@
 
 
-   <div class="preview">
+<div class="preview" [ngClass]="{ 'is-preview': isPreviewRoute }">
     <h3>Form Preview</h3>
   
     <div *ngIf="formFields.length === 0">
@@ -105,7 +105,7 @@
       </div>
 
     </div>
-  </div>
+</div>
   
 
 

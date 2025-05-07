@@ -1,10 +1,14 @@
-<h2>signUp</h2>
+<div class="glass-wrapper">
+    <div class="glass-form">
+        <h2>signUp</h2>
 
-<form (ngSubmit)="onsignup()">
-    <input [(ngModel)]="firstname" name="firstname" placeholder="firstname" required />
-    <input [(ngModel)]="lastname" name="lastname" placeholder="lastname" required />
-    <input [(ngModel)]="email" name="email" placeholder="email" required />
-    <input [(ngModel)]="password" name="password" placeholder="password" required />
-    <button type="submit">submit</button>
+        <form (ngSubmit)="onsignup()">
+            <input [(ngModel)]="firstname" name="firstname" placeholder="firstname" required />
+            <input [(ngModel)]="lastname" name="lastname" placeholder="lastname" required />
+            <input [(ngModel)]="email" name="email" placeholder="email" required />
+            <input [(ngModel)]="password" name="password" placeholder="password" required />
+            <button type="submit">submit</button>
 
-</form>
+        </form>
+    </div>    
+</div>    

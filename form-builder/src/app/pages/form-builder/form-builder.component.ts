@@ -359,4 +359,14 @@ testVisitWebhook() {
     });
 }
 
+onWebhookCheckboxChange(type: 'lead' | 'visit') {
+  if (type === 'lead' && this.webhookConfig.events.lead) {
+    this.webhookConfig.events.visit = false;
+  } else if (type === 'visit' && this.webhookConfig.events.visit) {
+    this.webhookConfig.events.lead = false;
+  }
+}
+
+
+
 }

@@ -1,7 +1,12 @@
-<h2>login</h2>
 
-<form (ngSubmit)="onLogin()">
-    <input [(ngModel)]="email" name="email" placeholder="email" required />
-    <input [(ngModel)]="password" name="password" placeholder="password" required />
-    <button type="submit">submit</button>
-</form>
+<div class="glass-wrapper">
+    <div class="glass-form">
+        <h2>login</h2>
+
+        <form (ngSubmit)="onLogin()">
+            <input [(ngModel)]="email" name="email" placeholder="email" required />
+            <input [(ngModel)]="password" name="password" placeholder="password" required />
+            <button type="submit">submit</button>
+        </form>
+    </div>
+</div>    
