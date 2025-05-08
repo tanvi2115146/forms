@@ -189,7 +189,7 @@ export class PreviewComponent {
         
         
         if (this.formId && this.webhookConfig.events.visit) {
-          console.log('Triggering visit webhook with updated data:', this.questionStats);
+          console.log('Triggering visit webhook with updated data:',this.questionStats);
           this.webhookService.triggerVisitWebhook(this.formId, this.questionStats)
             .subscribe({
               next: (res) => console.log('Webhook triggered with real-time data', res),
@@ -203,6 +203,11 @@ export class PreviewComponent {
       }
     });
   }
+
+
+
+
+
 
   next() {
     if (this.currentIndex < this.formFields.length - 1) {

@@ -6,7 +6,7 @@ class MailerLiteService {
     this.baseUrl = 'https://api.mailerlite.com/api/v2';
   }
 
-  async addSubscriber(email, name, groupId, fields = {}) {
+  async addSubscriber(email,name,groupId, fields = {}) {
     try {
       const response = await axios.post(
         `${this.baseUrl}/subscribers`,

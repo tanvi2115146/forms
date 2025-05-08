@@ -119,5 +119,4 @@ const submitLead = async (req, res) => {
 
 
 
-
 module.exports = {createVisitor,submitLead,updateQuestionStats};

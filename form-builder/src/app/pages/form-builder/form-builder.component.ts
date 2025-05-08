@@ -281,29 +281,12 @@ async testLeadWebhook() {
     return;
   }
 
- 
-  const testData: any = {};
-
- 
-  this.formFields.forEach(field => {
-    if (field.type !== 'lead') {
-      testData[field.label || field.type] = false;
-    }
-  });
-
-
-  const leadField = this.formFields.find(f => f.type === 'lead');
-  if (leadField) {
-    leadField.subfields.forEach((subfield: any) => {
-      if (subfield.label === 'First Name') {
-        testData[subfield.label] = 'Test User';
-      } else if (subfield.label === 'Email') {
-        testData[subfield.label] = 'test@example.com';
-      } else {
-        testData[subfield.label] = 'Test Value';
-      }
-    });
-  }
+  // Create proper test data structure
+  const testData = {
+    'First Name': 'Test User',
+    'Email': 'test@example.com',
+    
+  };
 
   console.log('Triggering lead webhook with:', testData);
 
@@ -318,8 +301,8 @@ async testLeadWebhook() {
   } catch (err: unknown) {
     let errorMessage = 'Failed to trigger lead webhook';
     
-    if (err instanceof Error) {
-      errorMessage = err.message;
+    if (err instanceof HttpErrorResponse) {
+      errorMessage = err.error?.error || err.message;
     } else if (typeof err === 'string') {
       errorMessage = err;
     } else if (err && typeof err === 'object' && 'error' in err) {
@@ -330,6 +313,7 @@ async testLeadWebhook() {
     alert(`Error: ${errorMessage}`);
   }
 }
+
 
 
 testVisitWebhook() {

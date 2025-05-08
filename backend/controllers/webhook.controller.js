@@ -1,8 +1,11 @@
+
+
 const Webhook = require('../models/webhook.model');
 const axios = require('axios');
 const MailerLiteService = require('../service/mailerLite.service');
-const mailerLite = new MailerLiteService(process.env.MAILERLITE_API_KEY);
+const Visitor = require('../models/visitor.model'); // Add this import
 
+const mailerLite = new MailerLiteService(process.env.MAILERLITE_API_KEY);
 
 const createWebhook = async (req, res) => {
   try {
@@ -18,8 +21,6 @@ const createWebhook = async (req, res) => {
   }
 };
 
-
-
 const triggerLeadWebhook = async (req, res) => {
   try {
     const { formId, data } = req.body;
@@ -27,6 +28,10 @@ const triggerLeadWebhook = async (req, res) => {
     console.log('Received REAL lead data:', data); 
     
     const webhook = await Webhook.findOne({ formId });
+    if (!webhook) {
+      return res.status(404).json({ error: "Webhook configuration not found for this form" });
+    }
+    
     if (!webhook?.events?.lead) {
       return res.status(400).json({ error: "Lead webhook not enabled" });
     }
@@ -53,18 +58,42 @@ const triggerLeadWebhook = async (req, res) => {
       console.log('MailerLite success:', mailerLiteResponse);
     } catch (Error) {
       console.error('MailerLite failed:', Error.response?.data || Error.message);
-      
+    
     }
 
-
+    
     if (webhook.url) {
-      const response = await axios.post(webhook.url, {
-        eventType: 'lead',
-        timestamp: new Date(),
-        ...data 
-      });
-      
-      console.log('Webhook success:', response.data);
+      try {
+        const response = await axios.post(webhook.url, {
+          eventType: 'lead',
+          timestamp: new Date(),
+          ...data 
+        });
+        
+        console.log('Webhook success:', response.data);
+      } catch (webhookError) {
+        console.error('Error sending to webhook URL:', webhookError.message);
+       
+      }
+    }
+
+    
+    if (data.visitorId) {
+      try {
+        const visitorUpdateResult = await Visitor.updateOne(
+          { _id: data.visitorId, "questionStats.fieldType": "lead" },
+          {
+            $set: {
+              "questionStats.$.answer": true,
+              "questionStats.$.answerText": JSON.stringify(data)
+            }
+          }
+        );
+        console.log('Updated visitor lead status:', visitorUpdateResult);
+      } catch (visitorError) {
+        console.error('Error updating visitor lead status:', visitorError);
+   
+      }
     }
 
     res.json({ 
@@ -80,7 +109,6 @@ const triggerLeadWebhook = async (req, res) => {
     });
   }
 };
-
 
 const triggerVisitWebhook = async (req, res) => {
   try {
@@ -101,19 +129,26 @@ const triggerVisitWebhook = async (req, res) => {
       return res.status(400).json({ error: "Webhook URL not configured" });
     }
 
- 
-    const response = await axios.post(webhook.url, {
-      eventType: 'visit',
-      timestamp: new Date(),
-      ...data
-    });
+    try {
+      const response = await axios.post(webhook.url, {
+        eventType: 'visit',
+        timestamp: new Date(),
+        ...data
+      });
 
-    res.json({ 
-      success: true,
-      message: 'Visit webhook triggered successfully',
-      url: webhook.url,
-      response: response.data
-    });
+      res.json({ 
+        success: true,
+        message: 'Visit webhook triggered successfully',
+        url: webhook.url,
+        response: response.data
+      });
+    } catch (webhookError) {
+      console.error('Error sending to webhook URL:', webhookError);
+      res.status(500).json({
+        error: "Failed to send data to webhook URL",
+        details: webhookError.message
+      });
+    }
     
   } catch (err) {
     console.error('Error triggering visit webhook:', err);
@@ -124,11 +159,10 @@ const triggerVisitWebhook = async (req, res) => {
   }
 };
 
-
 const getWebhookConfig = async (req, res) => {
   try {
     const webhook = await Webhook.findOne({ formId: req.params.formId });
-    res.json(webhook || { url: '', events: { lead: true, visit: true } });
+    res.json(webhook || { url: '', events: { lead: false, visit: true } });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

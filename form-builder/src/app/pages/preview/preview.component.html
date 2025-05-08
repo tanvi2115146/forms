@@ -36,10 +36,11 @@
       <app-lead-form 
         *ngIf="formFields[currentIndex].type === 'lead'"
         [field]="formFields[currentIndex]"
-        
+        [webhookConfig]="webhookConfig"
         [visitorId]="visitorId"
         [formId]="formId"
-        >
+        [questionStats]="questionStats"
+        (answerChanged)="storeAnswer($event)">
       </app-lead-form>
 
       <app-checkbox 
@@ -91,7 +92,9 @@
          *ngIf="field.type === 'lead'"
          [field]="field"
          [visitorId]="visitorId"
-        >
+         [questionStats]="questionStats"
+         [webhookConfig]="webhookConfig"
+         (answerChanged)="storeAnswer($event)">
        </app-lead-form>
     
 

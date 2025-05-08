@@ -1,8 +1,11 @@
+
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class WebhookService {
@@ -16,11 +19,23 @@ export class WebhookService {
   }
 
   getWebhookConfig(formId: string) {
-    return this.http.get<any>(`${this.baseUrl}/config/${formId}`);
+    return this.http.get<any>(`${this.baseUrl}/config/${formId}`).pipe(
+      catchError((error) => {
+        console.error('Error fetching webhook config:', error);
+       
+        return of({ url: '', events: { lead: false, visit: true } });
+      })
+    );
   }
 
   triggerLeadWebhook(formId: string, leadData: any): Observable<any> {
     console.log('Triggering lead webhook with data:', leadData);
+    
+   
+    if (!leadData['First Name'] || !leadData['Email']) {
+      console.error('Missing required fields for lead webhook');
+      return throwError(() => new Error('Missing required lead form fields (First Name and Email)'));
+    }
     
     return this.http.post(`${this.baseUrl}/trigger/lead`, { 
       formId, 
@@ -28,12 +43,22 @@ export class WebhookService {
     }).pipe(
       tap(response => console.log('Lead webhook response:', response)),
       catchError((error: HttpErrorResponse) => {
+        
+        if (error.status === 400 && 
+            (error.error?.error === 'Lead webhook not enabled' || 
+             error.error?.message?.includes('not enabled'))) {
+          console.warn('Lead webhook is not enabled for this form');
+        
+          return of({ success: false, reason: 'webhook_not_enabled' });
+        }
+        
+       
         console.error('Lead webhook error:', error);
-        throw new Error(
+        return throwError(() => new Error(
           error.error?.error || 
           error.error?.message || 
           'Failed to trigger lead webhook'
-        );
+        ));
       })
     );
   }
@@ -48,12 +73,21 @@ export class WebhookService {
     }).pipe(
       tap(response => console.log('Visit webhook response:', response)),
       catchError((error: HttpErrorResponse) => {
+        
+        if (error.status === 400 && 
+            (error.error?.error === 'Visit webhook not enabled' || 
+             error.error?.message?.includes('not enabled'))) {
+          console.warn('Visit webhook is not enabled for this form');
+       
+          return of({ success: false, reason: 'webhook_not_enabled' });
+        }
+        
         console.error('Visit webhook error:', error);
-        throw new Error(
+        return throwError(() => new Error(
           error.error?.error || 
           error.error?.message || 
           'Failed to trigger visit webhook'
-        );
+        ));
       })
     );
   }
