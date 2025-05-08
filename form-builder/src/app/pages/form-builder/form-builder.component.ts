@@ -77,7 +77,7 @@ export class FormBuilderComponent {
         }
       });
       
-      // Load webhook config
+     
       this.webhookService.getWebhookConfig(this.formId).subscribe(config => {
         this.webhookConfig = config || {
           url: '',
@@ -342,6 +342,10 @@ testVisitWebhook() {
       }
     });
 }
+
+
+
+
 
 onWebhookCheckboxChange(type: 'lead' | 'visit') {
   if (type === 'lead' && this.webhookConfig.events.lead) {

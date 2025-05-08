@@ -110,6 +110,10 @@ const triggerLeadWebhook = async (req, res) => {
   }
 };
 
+
+
+
+
 const triggerVisitWebhook = async (req, res) => {
   try {
     const { formId, data } = req.body;
@@ -124,29 +128,75 @@ const triggerVisitWebhook = async (req, res) => {
     if (!webhook.events.visit) {
       return res.status(400).json({ error: "Visit webhook not enabled" });
     }
+
+   
+    let leadSubmissions = [];
     
-    if (!webhook.url) {
-      return res.status(400).json({ error: "Webhook URL not configured" });
+    if (Array.isArray(data)) {
+      leadSubmissions = data
+        .filter(item => item.fieldType === 'lead' && item.answerText)
+        .map(item => {
+          try {
+            return JSON.parse(item.answerText);
+          } catch (e) {
+            console.error('Error parsing lead data:', e);
+            return null;
+          }
+        })
+        .filter(leadData => leadData && leadData['Email'] && leadData['First Name']);
     }
 
-    try {
-      const response = await axios.post(webhook.url, {
-        eventType: 'visit',
-        timestamp: new Date(),
-        ...data
-      });
 
+    if (leadSubmissions.length > 0) {
+      const leadData = leadSubmissions[0];
+      console.log('Processing lead data:', leadData);
+
+      try {
+        const mailerLiteResponse = await mailerLite.addSubscriber(
+          leadData['Email'],
+          leadData['First Name'],
+          process.env.MAILERLITE_GROUP_ID,
+          {
+            q1_title: leadData['Q1_Title'] || 'Default Question 1',
+            q1_answer: leadData['Q1_Answer'] || '',
+            q2_title: leadData['Q2_Title'] || 'Default Question 2',
+            q2_answer: leadData['Q2_Answer'] || ''
+           
+          }
+        );
+        console.log('MailerLite subscriber added:', mailerLiteResponse);
+      } catch (mailerError) {
+        console.error('MailerLite error:', mailerError.response?.data || mailerError.message);
+      }
+    }
+
+    // Send to configured webhook URL if exists
+    if (webhook.url) {
+      try {
+        const response = await axios.post(webhook.url, {
+          eventType: 'visit',
+          timestamp: new Date(),
+          ...data,
+          leadData: leadSubmissions[0] || null
+        });
+
+        res.json({ 
+          success: true,
+          message: 'Visit webhook triggered successfully',
+          url: webhook.url,
+          response: response.data
+        });
+      } catch (webhookError) {
+        console.error('Error sending to webhook URL:', webhookError);
+        res.status(500).json({
+          error: "Failed to send data to webhook URL",
+          details: webhookError.message
+        });
+      }
+    } else {
       res.json({ 
         success: true,
-        message: 'Visit webhook triggered successfully',
-        url: webhook.url,
-        response: response.data
-      });
-    } catch (webhookError) {
-      console.error('Error sending to webhook URL:', webhookError);
-      res.status(500).json({
-        error: "Failed to send data to webhook URL",
-        details: webhookError.message
+        message: 'Visit processed (no webhook URL configured)'
       });
     }
     
@@ -158,6 +208,10 @@ const triggerVisitWebhook = async (req, res) => {
     });
   }
 };
+
+
+
+
 
 const getWebhookConfig = async (req, res) => {
   try {

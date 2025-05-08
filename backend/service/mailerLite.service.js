@@ -12,6 +12,7 @@ class MailerLiteService {
         `${this.baseUrl}/subscribers`,
         {
           email,
+          name,
           fields,
           groups: [groupId]
         },

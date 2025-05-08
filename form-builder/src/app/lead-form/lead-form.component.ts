@@ -51,31 +51,6 @@ export class LeadFormComponent {
 
 
 
-
-
-
-onInputChange() {
-  const hasData = Object.values(this.leadData).some(value => value !== '');
-
-  if (this.field && this.field._id) {
-    const updatedAnswer = {
-      questionId: this.field._id,
-      question: this.field.label,
-      answer: hasData ? JSON.stringify(this.leadData) : '',
-      answerText: hasData ? JSON.stringify(this.leadData) : '',
-      fieldType: 'lead'
-    };
-
-    // Emit the answer to the parent component (if needed)
-    this.answerChanged.emit({
-      question: this.field.label,
-      answer: hasData ? JSON.stringify(this.leadData) : '',
-      fieldType: 'lead'
-    });
-
-  }
-}
-
   
 
   submitForm() {
@@ -162,21 +137,28 @@ onInputChange() {
     });
   }
   
-  // Separated lead webhook logic into its own method
+
+
+
+
+
+
+
+
+
   private handleLeadWebhook() {
-    // Only trigger lead webhook if it's enabled in config
+
     if (this.formId && this.webhookConfig?.events?.lead) {
       console.log('Lead webhook is enabled, triggering...');
-      
-      // Prepare webhook data for lead-specific webhook
+    
       const webhookData: any = {};
       
-      // Add all lead form fields
+    
       Object.entries(this.leadData).forEach(([key, value]) => {
         webhookData[key] = value;
       });
 
-      // Add special field for MailerLite integration
+
       webhookData['visitorId'] = this.visitorId;
      
       this.webhookService.triggerLeadWebhook(
@@ -189,7 +171,7 @@ onInputChange() {
         },
         error: (err) => {
           console.error('Lead webhook error', err);
-          // Still show success since the form data was saved, even if webhook failed
+          
           alert('Form submitted successfully! (Note: webhook notification failed)');
         }
       });
